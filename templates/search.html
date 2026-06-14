@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Recherche : {{ query }} - ABCo SARL{% endblock %}
+
+{% block content %}
+<style>
+  .search-page {
+    padding: 64px 0 80px;
+  }
+
+  .search-page .search-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .search-page .section-title {
+    margin-bottom: 12px;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #111;
+  }
+
+  .search-page .search-subtitle {
+    font-size: 1rem;
+    color: #777;
+    margin: 0;
+  }
+
+  .search-page .products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .search-page .product-card {
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .search-page .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    border-color: #e2e2e2;
+  }
+
+  .search-page .product-image {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #f8f8f8;
+    overflow: hidden;
+  }
+
+  .search-page .product-image a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .search-page .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .search-page .product-card:hover .product-image img {
+    transform: scale(1.04);
+  }
+
+  .search-page .badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(6px);
+  }
+
+  .search-page .badge-out {
+    background: rgba(17, 17, 17, 0.9);
+    color: #fff;
+  }
+
+  .search-page .badge-limited {
+    background: rgba(255, 248, 230, 0.95);
+    color: #8a6a00;
+    border: 1px solid rgba(138, 106, 0, 0.12);
+  }
+
+  .search-page .product-details {
+    padding: 20px 20px 22px;
+  }
+
+  .search-page .product-name {
+    margin: 0 0 10px;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .search-page .product-name a {
+    color: #111;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .search-page .product-name a:hover {
+    color: #555;
+  }
+
+  .search-page .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .search-page .stars {
+    display: flex;
+    gap: 2px;
+    line-height: 1;
+  }
+
+  .search-page .star {
+    font-size: 0.95rem;
+    color: #d6d6d6;
+  }
+
+  .search-page .star.filled {
+    color: #111;
+  }
+
+  .search-page .rating-text {
+    font-size: 0.85rem;
+    color: #8a8a8a;
+  }
+
+  .search-page .product-description {
+    margin: 0 0 18px;
+    color: #666;
+    font-size: 0.94rem;
+    line-height: 1.7;
+    min-height: 3.2em;
+  }
+
+  .search-page .product-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f1f1;
+  }
+
+  .search-page .product-price {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.01em;
+  }
+
+  .search-page .product-stock {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #888;
+  }
+
+  .search-page .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    border: 1px solid #efefef;
+    border-radius: 24px;
+    background: #fcfcfc;
+  }
+
+  .search-page .empty-state h2 {
+    color: #444;
+    margin-bottom: 10px;
+    font-size: 1.6rem;
+  }
+
+  .search-page .empty-state p {
+    color: #9a9a9a;
+    margin-bottom: 24px;
+  }
+
+  .search-page .btn-submit-review {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .search-page .btn-submit-review:hover {
+    background: #222;
+    transform: translateY(-1px);
+  }
+
+ @media (max-width: 1200px) {
+  .search-page .products-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .search-page .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .search-page {
+    padding: 48px 0 64px;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-page .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .search-page .product-details {
+    padding: 14px;
+  }
+
+  .search-page .section-title {
+    font-size: 1.5rem;
+  }
+
+  .search-page .product-name {
+    font-size: 0.92rem;
+  }
+
+  .search-page .product-description {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    min-height: auto;
+  }
+
+  .search-page .product-price {
+    font-size: 1rem;
+  }
+
+  .search-page .product-stock,
+  .search-page .rating-text {
+    font-size: 0.78rem;
+  }
+
+  .search-page .badge {
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    font-size: 0.65rem;
+  }
+}
+
+</style>
+
+<div class="search-page">
+  <div class="search-header">
+    <h1 class="section-title">Résultats de recherche pour “{{ query }}”</h1>
+
+    {% if total_results > 0 %}
+      <p class="search-subtitle">
+        {{ total_results }} produit{{ total_results|pluralize }} trouvé{{ total_results|pluralize }}
+      </p>
+    {% endif %}
+  </div>
+
+  {% if total_results > 0 %}
+    <div class="products-grid">
+      {% for product in products %}
+        <div class="product-card">
+          <div class="product-image">
+            <a href="{% url 'product_detail' product.slug %}">
+              {% if product.images.first %}
+                <img
+                  src="{{ product.images.first.image.url }}"
+                  alt="{{ product.name }}"
+                  loading="lazy"
+                />
+              {% else %}
+                <img
+                  src="{% static 'images/placeholder.png' %}"
+                  alt="{{ product.name }}"
+                  loading="lazy"
+                />
+              {% endif %}
+            </a>
+
+            {% if product.stock == 0 %}
+              <span class="badge badge-out">Rupture</span>
+            {% elif product.stock < 5 %}
+              <span class="badge badge-limited">Stock limité</span>
+            {% endif %}
+          </div>
+
+          <div class="product-details">
+            <h3 class="product-name">
+              <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+            </h3>
+
+            <div class="product-rating">
+              <div class="stars">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= product.average_rating %}
+                    <span class="star filled">★</span>
+                  {% else %}
+                    <span class="star">★</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <span class="rating-text">({{ product.reviews.count }})</span>
+            </div>
+
+            <p class="product-description">
+              {{ product.description|truncatewords:15 }}
+            </p>
+
+            <div class="product-footer">
+              <div>
+                <div class="product-price">
+                  {{ product.price|floatformat:0 }} FCFA
+                </div>
+                <div class="product-stock">
+                  {% if product.stock > 0 %}
+                    En stock ({{ product.stock }})
+                  {% else %}
+                    Rupture de stock
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <svg
+        width="120"
+        height="120"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#cfcfcf"
+        style="margin: 0 auto 20px; display: block;"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+
+      <h2>Aucun résultat trouvé</h2>
+      <p>Essayez avec d'autres mots-clés</p>
+
+      <a href="{% url 'home' %}" class="btn-submit-review">
+        Retour à l'accueil
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+        .weather-page {
+  --bg: #f7f4ef;
+  --bg-soft: #f3efe9;
+  --bg-white: #ffffff;
+  --bg-dark: #111111;
+  --text: #111111;
+  --text-soft: rgba(17, 17, 17, 0.72);
+  --text-muted: rgba(17, 17, 17, 0.52);
+  --border: rgba(17, 17, 17, 0.08);
+  --border-strong: rgba(17, 17, 17, 0.14);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 18px 50px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.12);
+  --radius-xs: 12px;
+  --radius-sm: 18px;
+  --radius-md: 24px;
+  --radius-lg: 32px;
+  --container: 1320px;
+  --height: 500px;
+
+  color: var(--text);
+  background: var(--bg-white);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  overflow-x: clip;
+  min-height: var(--height);
+}
+
+
+        #results div {
+            padding: 10px !important;
+            border: 1px solid #4d4b4b !important;
+            margin-top: 5px !important;
+            cursor: pointer !important;
+        }
+        #results div:hover {
+            background: rgba(6, 12, 29, 0.3) !important;
+        }
+        .weather-box {
+            margin-top: 20px !important;
+            padding: 20px !important;
+            border: 1px solid #4d4b4b !important;
+        }
+        .forecast-item {
+            margin-top: 10px !important;
+            padding: 10px !important;
+            border-bottom: 1px solid #4d4b4b !important;
+        }

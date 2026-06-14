@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} weather {% endblock %}
+{% block css %}
+        <link rel="stylesheet" href="{% static 'css/weather.css' %}"> {{block.super}}
+{% endblock %}
+
+{% block content %}
+    <div class="weather-page">
+        <h1 style="margin-left: 10px;">Recherche météo</h1>
+        <p style="margin: 20px; font-size: 13px; letter-spacing: 1px; line-height: 1.5; color: #201f1f;">Nous utilisons un système de géocodage qui traduit le nom de la ville que vous entrez en parametre lon et lat (longitude et latitude) donc dans certains cas vous pouvez faire face à des imprécisions sur quelques kilomètres.</p>
+
+        <input type="text" id="cityInput" placeholder="Tape une ville" style="outline: none; margin: 30px 10px 30px 10px; width: 300px; padding: 10px 25px;">
+        <button id="searchBtn" style="padding: 10px 15px; cursor: pointer; background-color: black; color: #ccc; border: 2px solid rgba(38, 85, 42, 0.5); margin: 30px 10px 30px 10px; border-radius: 15px;">Rechercher</button>
+
+        <div id="results"></div>
+
+        <div id="weather" class="weather-box" style="display:none;"></div>
+    </div>
+
+ 
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/weather.js' %}"></script> {{block.super}}
+{% endblock %}

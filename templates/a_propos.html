@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}À propos{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="about-page">
+
+  <!-- HERO -->
+  <section class="about-hero">
+    <div class="site-shell about-hero-grid">
+      <div class="about-hero-copy">
+        <span class="section-kicker">À propos de la marque</span>
+        <h1>Une maison pensée pour proposer plus qu’un simple catalogue.</h1>
+        <p class="hero-text">
+          Notre ambition est de construire une expérience e-commerce plus élégante,
+          plus rassurante et plus cohérente. Nous ne voulons pas seulement vendre des produits :
+          nous voulons proposer un univers, une qualité de présentation et une relation client
+          qui inspirent confiance.
+        </p>
+
+        <div class="hero-actions">
+          <a href="{% url 'home' %}" class="btn btn-dark">Découvrir la boutique</a>
+          <a href="{% url 'services' %}" class="btn btn-light">Voir nos services</a>
+        </div>
+      </div>
+
+      <div class="about-hero-visual">
+        <div class="visual-card visual-lg">
+          <img src="{% static 'images/about-hero-2.jpg' %}" alt="Univers de la marque">
+        </div>
+        <div class="visual-row">
+          <div class="visual-card visual-sm">
+            <img src="{% static 'images/about-hero-2.jpg' %}" alt="Collection">
+          </div>
+          <div class="visual-card visual-sm">
+            <img src="{% static 'images/about-hero-2.jpg' %}" alt="Détails premium">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="brand-intro">
+    <div class="site-shell brand-intro-grid">
+      <div class="intro-left">
+        <span class="section-kicker">Notre identité</span>
+        <h2>Créer une marque crédible, désirable et durable.</h2>
+      </div>
+
+      <div class="intro-right">
+        <p>
+          Nous croyons qu’un site professionnel doit donner une image forte dès les premières secondes.
+          L’esthétique, la structure, les informations, la lisibilité et le service client participent tous
+          à la qualité perçue. C’est cette exigence qui guide notre travail.
+        </p>
+        <p>
+          Notre vision repose sur une sélection cohérente, une présentation premium et une volonté claire :
+          offrir une expérience simple pour le client, tout en renforçant la stature de la marque.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story-section">
+    <div class="site-shell story-grid">
+      <div class="story-copy">
+        <span class="section-kicker">Notre histoire</span>
+        <h2>Une construction patiente, pensée avec sérieux.</h2>
+        <p>
+          Chaque marque forte commence par une intention claire. La nôtre consiste à bâtir un projet
+          e-commerce structuré, moderne et respectable. Nous avons voulu sortir d’une logique de simple
+          vitrine pour créer un environnement plus cohérent, plus abouti et plus professionnel.
+        </p>
+        <p>
+          Cela passe par des choix visuels, mais aussi par une logique de fond : mieux présenter les produits,
+          mieux accompagner le client, mieux structurer le parcours d’achat et mieux installer la confiance.
+        </p>
+        <p>
+          Cette page “À propos” ne sert pas seulement à raconter une histoire. Elle sert aussi à montrer
+          qu’il y a une vraie démarche derrière le site, une vraie exigence et une vraie vision de marque.
+        </p>
+      </div>
+
+      <div class="story-stats">
+        <div class="stat-card">
+          <strong>Vision</strong>
+          <span>Construire une marque moderne et premium.</span>
+        </div>
+        <div class="stat-card">
+          <strong>Exigence</strong>
+          <span>Soigner autant le fond que la présentation.</span>
+        </div>
+        <div class="stat-card">
+          <strong>Expérience</strong>
+          <span>Rendre l’achat plus fluide, clair et rassurant.</span>
+        </div>
+        <div class="stat-card">
+          <strong>Durabilité</strong>
+          <span>Poser des bases solides pour faire évoluer le site.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="values-section">
+    <div class="site-shell">
+      <div class="section-heading center">
+        <span class="section-kicker">Nos valeurs</span>
+        <h2>Les principes qui structurent notre approche</h2>
+        <p>
+          Nous voulons une marque propre, lisible et fiable. Cette ambition se traduit
+          dans le design, dans la relation client et dans la manière dont chaque détail est présenté.
+        </p>
+      </div>
+
+      <div class="values-grid">
+        <article class="value-card">
+          <span class="value-number">01</span>
+          <h3>Clarté</h3>
+          <p>
+            Nous privilégions des interfaces simples, des informations visibles et une lecture fluide
+            pour éviter toute confusion.
+          </p>
+        </article>
+
+        <article class="value-card">
+          <span class="value-number">02</span>
+          <h3>Confiance</h3>
+          <p>
+            Un site sérieux doit rassurer. C’est pourquoi nous accordons une importance réelle
+            aux détails, aux engagements et à la cohérence générale.
+          </p>
+        </article>
+
+        <article class="value-card">
+          <span class="value-number">03</span>
+          <h3>Exigence</h3>
+          <p>
+            Nous cherchons à élever la qualité de présentation pour renforcer la valeur perçue
+            et donner à la marque une image plus forte.
+          </p>
+        </article>
+
+        <article class="value-card">
+          <span class="value-number">04</span>
+          <h3>Service</h3>
+          <p>
+            Le service client fait partie intégrante de l’expérience. Une marque premium doit être
+            disponible, lisible et attentive.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="mission-section">
+    <div class="site-shell mission-grid">
+      <div class="mission-panel dark">
+        <span class="section-kicker">Notre mission</span>
+        <h2>Offrir une expérience d’achat plus haut de gamme.</h2>
+        <p>
+          Nous voulons que chaque visite inspire davantage de confiance, davantage d’envie et
+          davantage de confort. Notre mission est de construire une expérience digitale
+          qui fasse progresser l’image de la marque en même temps que la performance commerciale.
+        </p>
+      </div>
+
+      <div class="mission-panel light">
+        <span class="section-kicker">Notre promesse</span>
+        <h3>Un site pensé pour être beau, utile et sérieux.</h3>
+        <ul>
+          <li>Une présentation plus premium des produits</li>
+          <li>Un parcours utilisateur mieux organisé</li>
+          <li>Des informations plus claires et rassurantes</li>
+          <li>Une structure pensée pour grandir dans le temps</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIFFERENCE -->
+  <section class="difference-section">
+    <div class="site-shell">
+      <div class="section-heading">
+        <span class="section-kicker">Ce qui nous distingue</span>
+        <h2>Une approche plus complète que la simple mise en ligne de produits</h2>
+      </div>
+
+      <div class="difference-grid">
+        <article class="difference-card">
+          <h3>Direction visuelle</h3>
+          <p>
+            Nous travaillons l’image globale du site pour qu’il dégage une vraie identité
+            et une meilleure perception de qualité.
+          </p>
+        </article>
+
+        <article class="difference-card">
+          <h3>Construction de confiance</h3>
+          <p>
+            La confiance ne dépend pas d’un seul bouton ou d’une seule fiche produit.
+            Elle se construit dans l’ensemble du parcours.
+          </p>
+        </article>
+
+        <article class="difference-card">
+          <h3>Logique de marque</h3>
+          <p>
+            Nous pensons en termes de marque, pas seulement en termes de catalogue.
+            Cela change la façon de concevoir les pages et les contenus.
+          </p>
+        </article>
+
+        <article class="difference-card">
+          <h3>Vision long terme</h3>
+          <p>
+            Les bases sont pensées pour permettre au site d’évoluer vers quelque chose
+            de plus grand, plus complet et plus ambitieux.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="timeline-section">
+    <div class="site-shell">
+      <div class="section-heading center">
+        <span class="section-kicker">Notre démarche</span>
+        <h2>Une progression structurée</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-step">01</span>
+          <div>
+            <h3>Définir une identité</h3>
+            <p>Clarifier le positionnement, la cible, le ton et l’univers visuel.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-step">02</span>
+          <div>
+            <h3>Construire une base sérieuse</h3>
+            <p>Créer des pages cohérentes, une navigation propre et une structure crédible.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-step">03</span>
+          <div>
+            <h3>Renforcer l’expérience client</h3>
+            <p>Ajouter les bons services, les bons parcours et les bons points de réassurance.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-step">04</span>
+          <div>
+            <h3>Faire évoluer la marque</h3>
+            <p>Développer un site plus riche, plus ambitieux et plus professionnel dans le temps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="about-cta">
+    <div class="site-shell cta-card">
+      <div class="cta-copy">
+        <span class="section-kicker">Aller plus loin</span>
+        <h2>Découvrir notre approche de service et d’accompagnement</h2>
+        <p>
+          Au-delà des produits, nous voulons proposer une expérience plus sérieuse,
+          plus stable et plus satisfaisante à chaque étape.
+        </p>
+      </div>
+
+      <div class="cta-actions">
+        <a href="{% url 'services' %}" class="btn btn-dark">Voir les services</a>
+        <a href="{% url 'contact' %}" class="btn btn-light">Nous contacter</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/services.css' %}">
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="services-page">
+
+  <!-- HERO -->
+  <section class="services-hero">
+    <div class="site-shell services-hero-grid">
+      <div class="services-hero-copy">
+        <span class="section-kicker">Nos services</span>
+        <h1>Une expérience client pensée pour être claire, fluide et rassurante.</h1>
+        <p class="hero-text">
+          Un site professionnel ne se limite pas à exposer des produits.
+          Il doit aussi accompagner, informer, rassurer et offrir un cadre sérieux
+          à chaque étape du parcours client.
+        </p>
+
+        <div class="hero-actions">
+          <a href="{% url 'home' %}" class="btn btn-dark">Explorer la boutique</a>
+          <a href="{% url 'apropos' %}" class="btn btn-light">À propos de nous</a>
+        </div>
+      </div>
+
+      <div class="services-hero-panel">
+        <div class="panel-box">
+          <span class="panel-label">Engagement de service</span>
+          <h3>Une approche orientée confiance</h3>
+          <p>
+            Nous voulons que chaque client se sente accompagné, informé et en sécurité
+            dans son parcours d’achat.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="services-intro">
+    <div class="site-shell services-intro-grid">
+      <div class="intro-title">
+        <span class="section-kicker">Notre philosophie</span>
+        <h2>Le service fait partie du produit.</h2>
+      </div>
+
+      <div class="intro-text">
+        <p>
+          Un bon produit mal présenté ou mal accompagné perd une partie de sa valeur.
+          C’est pourquoi nous considérons le service comme un élément central de l’expérience.
+        </p>
+        <p>
+          Notre objectif est de créer un environnement dans lequel le client comprend rapidement
+          l’offre, trouve les bonnes informations et avance avec davantage de sérénité.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE SERVICES -->
+  <section class="core-services">
+    <div class="site-shell">
+      <div class="section-heading center">
+        <span class="section-kicker">Ce que nous proposons</span>
+        <h2>Des services pensés pour un site e-commerce plus pro</h2>
+        <p>
+          Voici les grands piliers d’une expérience sérieuse, cohérente et prête à évoluer.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card featured">
+          <span class="service-index">01</span>
+          <h3>Accompagnement avant achat</h3>
+          <p>
+            Nous voulons faciliter la prise de décision grâce à des informations plus claires,
+            une présentation plus lisible et la possibilité d’être accompagné si nécessaire.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <span class="service-index">02</span>
+          <h3>Expérience de commande fluide</h3>
+          <p>
+            Le parcours de paiement et de validation doit être simple, fiable et cohérent,
+            sans zones de doute inutiles.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <span class="service-index">03</span>
+          <h3>Suivi de commande</h3>
+          <p>
+            Un client doit savoir où il en est. La gestion des statuts, de la validation au suivi,
+            participe directement à la confiance.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <span class="service-index">04</span>
+          <h3>Support client</h3>
+          <p>
+            Une marque sérieuse reste disponible. Le support n’est pas un détail :
+            il prolonge la qualité de l’expérience après la commande.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <span class="service-index">05</span>
+          <h3>Présentation premium</h3>
+          <p>
+            Nous valorisons les produits avec une structure plus élégante et plus claire,
+            afin de renforcer la valeur perçue.
+          </p>
+        </article>
+
+        <article class="service-card">
+          <span class="service-index">06</span>
+          <h3>Évolution continue</h3>
+          <p>
+            L’ambition n’est pas de rester figé. Nous voulons faire évoluer le site,
+            les pages et l’expérience dans une logique de progression.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process-section">
+    <div class="site-shell process-grid">
+      <div class="process-copy">
+        <span class="section-kicker">Comment cela se traduit</span>
+        <h2>Une expérience pensée étape par étape</h2>
+        <p>
+          Le professionnalisme se voit surtout dans la qualité du parcours.
+          Un site sérieux aide l’utilisateur avant, pendant et après la commande.
+        </p>
+      </div>
+
+      <div class="process-steps">
+        <article class="process-step">
+          <div class="step-badge">01</div>
+          <div>
+            <h3>Découverte</h3>
+            <p>Une homepage plus crédible, plus éditoriale et mieux structurée.</p>
+          </div>
+        </article>
+
+        <article class="process-step">
+          <div class="step-badge">02</div>
+          <div>
+            <h3>Compréhension</h3>
+            <p>Des informations plus lisibles sur les produits, les engagements et les services.</p>
+          </div>
+        </article>
+
+        <article class="process-step">
+          <div class="step-badge">03</div>
+          <div>
+            <h3>Décision</h3>
+            <p>Un cadre rassurant qui réduit les hésitations et améliore la conversion.</p>
+          </div>
+        </article>
+
+        <article class="process-step">
+          <div class="step-badge">04</div>
+          <div>
+            <h3>Suivi</h3>
+            <p>Une relation client plus sérieuse grâce à un meilleur suivi des commandes.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE BLOCKS -->
+  <section class="detail-services">
+    <div class="site-shell">
+      <div class="detail-grid">
+        <article class="detail-card dark">
+          <span class="section-kicker">Service client</span>
+          <h3>Disponibilité et accompagnement</h3>
+          <p>
+            Un client doit pouvoir poser une question, obtenir une précision ou être rassuré
+            avant de finaliser son achat. Nous voulons développer cet accompagnement
+            pour qu’il fasse partie intégrante de l’expérience.
+          </p>
+        </article>
+
+        <article class="detail-card light">
+          <span class="section-kicker">Commande</span>
+          <h3>Parcours plus fiable</h3>
+          <p>
+            La qualité du checkout, la compréhension du paiement et la lisibilité des étapes
+            sont au cœur d’un site professionnel.
+          </p>
+        </article>
+
+        <article class="detail-card light">
+          <span class="section-kicker">Livraison</span>
+          <h3>Clarté logistique</h3>
+          <p>
+            Les délais, les statuts, les conditions et les informations de livraison
+            doivent être présentés sans ambiguïté.
+          </p>
+        </article>
+
+        <article class="detail-card dark">
+          <span class="section-kicker">Après-vente</span>
+          <h3>Confiance dans la durée</h3>
+          <p>
+            Une relation client solide ne s’arrête pas au paiement. Le suivi après achat
+            est essentiel pour renforcer la crédibilité de la marque.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- REASSURANCE -->
+  <section class="reassurance-section">
+    <div class="site-shell">
+      <div class="section-heading center">
+        <span class="section-kicker">Pourquoi c’est important</span>
+        <h2>Les services renforcent directement la perception de sérieux</h2>
+      </div>
+
+      <div class="reassurance-grid">
+        <div class="reassurance-item">
+          <strong>Plus de confiance</strong>
+          <p>Le client avance avec moins d’hésitation lorsqu’il comprend mieux le cadre.</p>
+        </div>
+        <div class="reassurance-item">
+          <strong>Plus de lisibilité</strong>
+          <p>Un parcours plus structuré évite les blocages et réduit les frictions.</p>
+        </div>
+        <div class="reassurance-item">
+          <strong>Plus de crédibilité</strong>
+          <p>Des pages riches et bien construites donnent au site une stature plus professionnelle.</p>
+        </div>
+        <div class="reassurance-item">
+          <strong>Plus de fidélisation</strong>
+          <p>Un bon service laisse une meilleure impression et favorise le retour client.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SERVICE -->
+  <section class="faq-section">
+    <div class="site-shell faq-grid">
+      <div class="faq-copy">
+        <span class="section-kicker">Questions fréquentes</span>
+        <h2>Des réponses claires pour mieux rassurer</h2>
+        <p>
+          Une page services professionnelle doit aussi anticiper les principales questions
+          des visiteurs et réduire leurs incertitudes.
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Quels types de services proposez-vous ?</summary>
+          <p>
+            Nous mettons l’accent sur la qualité de l’expérience : clarté du parcours,
+            présentation premium, accompagnement client et meilleure lisibilité des étapes.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Pourquoi mettre autant l’accent sur l’expérience client ?</summary>
+          <p>
+            Parce qu’un site sérieux ne vend pas seulement des articles : il doit aussi inspirer confiance,
+            rassurer et donner envie de revenir.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Vos services vont-ils évoluer ?</summary>
+          <p>
+            Oui. Cette base est pensée pour être enrichie avec de nouveaux outils, de nouvelles pages
+            et une meilleure gestion du parcours de commande.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Comment vous contacter ?</summary>
+          <p>
+            Vous pouvez utiliser la page de contact pour toute question liée à la commande,
+            aux produits ou aux informations générales.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="services-cta">
+    <div class="site-shell services-cta-card">
+      <div class="cta-copy">
+        <span class="section-kicker">Découvrir la marque</span>
+        <h2>En savoir plus sur notre vision et notre identité</h2>
+        <p>
+          Nos services prennent tout leur sens lorsqu’ils s’inscrivent dans une vraie vision de marque.
+        </p>
+      </div>
+
+      <div class="cta-actions">
+        <a href="{% url 'apropos' %}" class="btn btn-dark">Voir la page à propos</a>
+        <a href="{% url 'contact' %}" class="btn btn-light">Contacter le support</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

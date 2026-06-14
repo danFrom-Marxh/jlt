@@ -1,0 +1,402 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ product.name }}{% endblock %}
+{% block css %}
+        <link rel="stylesheet" href="{% static 'css/product_detail.css' %}"> {{block.super}}
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="position: relative; display: flex; justify-content: center; align-items: center; ">
+    {% if messages %}
+    <div class="messages" id="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %} 
+  
+  <div class="product-page-shell">
+
+    <div class="image-carousel">
+
+      {% if product.stock_quantity == 0 %}
+        <div class="no-image-container">
+          <img
+            src="{% static 'images/No-image.jpg' %}"
+            alt="Pas d'image disponible"
+            class="no-image"
+          >
+        </div>
+
+      {% elif all_images %}
+        <div class="main-image-container" id="mainImageContainer">
+          <button class="carousel-btn prev-btn" id="prevBtn" type="button" aria-label="Image précédente">&#8249;</button>
+
+          <div class="image-counter">
+            <span id="currentIndex">1</span> / <span id="totalImages">{{ all_images|length }}</span>
+          </div>
+
+          <div class="carousel-track" id="carouselTrack">
+            {% for image in all_images %}
+              <div class="carousel-slide">
+                <img
+                  src="{{ image.image.url }}"
+                  alt="{{ product.name }} - image {{ forloop.counter }}"
+                  class="main-product-image"
+                >
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="zoom-hint">cliquez pour voir l'image avec de meilleures dimmensions</div>
+
+          <button class="carousel-btn next-btn" id="nextBtn" type="button" aria-label="Image suivante">&#8250;</button>
+        </div>
+
+        <div class="thumbnails-container" id="mainThumbnails" style="">
+          {% for image in all_images %}
+            <img
+              src="{{ image.image.url }}"
+              alt="Miniature {{ forloop.counter }}"
+              class="thumbnail {% if forloop.first %}active{% endif %}"
+              data-index="{{ forloop.counter0 }}"
+            >
+          {% endfor %}
+        </div>
+
+      {% elif product.image %}
+        <div class="main-image-container" id="mainImageContainer">
+          <img
+            id="mainImage"
+            src="{{ product.image.url }}"
+            alt="{{ product.name }}"
+            class="main-product-image"
+          >
+          <div class="zoom-hint">Touchez ou cliquez pour mieux voir</div>
+        </div>
+
+      {% else %}
+        <div class="no-image-container">
+          <img
+            src="{% static 'images/No-image.jpg' %}"
+            alt="Pas d'image disponible"
+            class="no-image"
+          >
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="product-meta-panel">
+      <div class="product-kicker">Collection Signature</div>
+
+      <h1>{{ product.name }}</h1>
+
+      <div class="product-price-wrap">
+        <div class="product-price-main">${{ product.price }}</div>
+        <div class="product-tax-note">Tarif premium • Livraison selon disponibilité</div>
+      </div>
+
+      <div class="product-status-row">
+        {% if product.stock_status == 'out_of_stock' %}
+          <div class="status-pill out-stock">Produit actuellement indisponible</div>
+        {% else %}
+          {% if product.stock_quantity < 5 %}
+            <div class="status-pill low-stock">
+              Stock limité • seulement {{ product.stock_quantity }} restant{{ product.stock_quantity|pluralize }}
+            </div>
+          {% else %}
+            <div class="status-pill in-stock">Disponible en stock</div>
+          {% endif %}
+        {% endif %}
+
+        <div class="status-pill">Réf. premium JLT</div>
+      </div>
+
+<h3 style="font-family: Arial, Helvetica, sans-serif;">Variantes:</h3>
+<div class="variants">
+  {% for var in variants %}
+    <div
+      id="var-{{ var.id }}"
+      class="variant-card {% if var.stock == 0 %}is-disabled{% endif %}"
+      {% if var.stock > 0 %}
+        onclick="selectVariante('{{ var.id }}')"
+      {% endif %}
+      title="
+        {% if var.stock == 0 %}
+          Variante indisponible
+        {% else %}
+          Variante {{ forloop.counter }}
+        {% endif %}
+      "
+      data-variant-id="{{ var.id }}"
+    >
+      <div
+        class="variant-color
+          {% if var.stock == 0 %}
+            stock-out
+          {% elif var.stock <= 3 %}
+            stock-low
+          {% elif var.stock <= 5 %}
+            stock-medium
+          {% else %}
+            stock-good
+          {% endif %}
+        "
+        style="background-color: {{ var.color.code_hex|default:'#f3f3f3' }};"
+      >
+        <span class="variant-checkmark">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+        </span>
+      </div>
+
+      <div class="variant-meta">
+        {% if var.color %}
+          <span class="variant-label">{{ var.color.name }}</span>
+        {% endif %}
+
+        {% if var.size %}
+          <span class="variant-size">{{ var.size.name }}</span>
+        {% endif %}
+      </div>
+
+      <div class="variant-stock-text">
+        {% if var.stock == 0 %}
+          Rupture de stock
+        {% elif var.stock <= 3 %}
+          Stock faible ({{ var.stock }})
+        {% elif var.stock <= 5 %}
+          Plus que {{ var.stock }}
+        {% else %}
+          En stock
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>Aucune variante disponible.</p>
+  {% endfor %}
+</div>
+<br>
+<p id="var-ob" style="color: rgb(136, 41, 41); text-align: center;"></p>
+
+<br>
+<br>
+
+      <style>
+          {% if product.stock_status == 'out_of_stock' %}
+            form .addBtn{
+              opacity: 0.48;
+              cursor: not-allowed;
+              pointer-events: none;
+            }
+          {% endif %}
+      </style>
+
+      <div class="product-form-wrap">
+        <form id="add-form" method="POST" action="{% url 'add_to_cart' product.slug %}">
+          {% csrf_token %}
+          {% crispy form %}
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="secondary-content">
+  <div class="tabs-header">
+    <button class="tab-btn active" data-target="#desc-content" type="button">Description détaillée</button>
+    <button class="tab-btn" data-target="#reviews-content" type="button">
+      Avis clients
+      ({{ reviews.count }})
+    </button>
+  </div>
+
+  <div class="tab-content active" id="desc-content">
+    <div class="prose">
+      {{ product.description|safe }}
+    </div>
+  </div>
+
+  <div class="tab-content" id="reviews-content">
+    <div class="reviews-grid-layout">
+        <div class="review-form-side">
+            <h3>Donnez votre avis</h3>
+
+            <div class="review-form-wrap">
+              <form id="review-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="product_slug" id="product_slug" value="{{ product.slug }}">
+
+                <div class="mb-3">
+                    <label for="{{ review_form.name.id_for_label }}" class="requiredField">Nom</label>
+                    {{ review_form.name }}
+                    {% if review_form.name.errors %}
+                        <div class="errorlist">{{ review_form.name.errors }}</div>
+                    {% endif %}
+                </div>
+
+<div class="mb-3">
+  <label class="requiredField">Note</label>
+
+  <div class="rating-input-wrapper">
+    <div class="star-rating-input" id="starRatingInput">
+      <input type="radio" name="rating" value="1" id="star1">
+      <label for="star1" data-value="1" aria-label="1 étoile">★</label>
+
+      <input type="radio" name="rating" value="2" id="star2">
+      <label for="star2" data-value="2" aria-label="2 étoiles">★</label>
+
+      <input type="radio" name="rating" value="3" id="star3">
+      <label for="star3" data-value="3" aria-label="3 étoiles">★</label>
+
+      <input type="radio" name="rating" value="4" id="star4">
+      <label for="star4" data-value="4" aria-label="4 étoiles">★</label>
+
+      <input type="radio" name="rating" value="5" id="star5">
+      <label for="star5" data-value="5" aria-label="5 étoiles">★</label>
+    </div>
+
+    <div class="rating-text" id="ratingText">Sélectionnez une note</div>
+
+    {% if review_form.rating.errors %}
+      <div class="errorlist">{{ review_form.rating.errors }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="mb-3">
+    <label for="{{ review_form.comment.id_for_label }}" class="requiredField">Commentaire</label>
+    {{ review_form.comment }}
+    {% if review_form.comment.errors %}
+        <div class="errorlist">{{ review_form.comment.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="mb-3">
+    <label for="{{ review_form.image.id_for_label }}" class="optionalField">Votre image (facultatif)</label>
+    {{ review_form.image }}
+    {% if review_form.image.errors %}
+        <div class="errorlist">{{ review_form.image.errors }}</div>
+    {% endif %}
+</div>
+
+<button type="submit" class="btn-submit">Publier l'avis</button>
+
+      </form>
+    </div>
+  </div>
+
+
+
+  <div class="review-summary-side">
+  <div class="review-summary-bar">
+    <div>
+      <div class="review-score-big">{{ product.average_rating|default:"0.0" }}</div>
+      <div class="stars-display">
+        {% for i in "12345" %}
+          <span class="s-star {% if forloop.counter <= product.average_rating %}filled{% endif %}">★</span>
+        {% endfor %}
+      </div>
+      <div class="review-score-sub">
+        Basé sur {{ reviews.count }} avis client{{ product.reviews.count|pluralize }}
+      </div>
+    </div>
+
+    <div class="review-bars">
+      <div class="review-bar-row">
+        <span>5★</span>
+        <div class="review-bar"><span style="width: {{ rating_5_percent|default:'0' }}%;"></span></div>
+        <span>{{ rating_counts.5|default:"0" }}</span>
+      </div>
+      <div class="review-bar-row">
+        <span>4★</span>
+        <div class="review-bar"><span style="width: {{ rating_4_percent|default:'0' }}%;"></span></div>
+        <span>{{ rating_counts.4|default:"0" }}</span>
+      </div>
+      <div class="review-bar-row">
+        <span>3★</span>
+        <div class="review-bar"><span style="width: {{ rating_3_percent|default:'0' }}%;"></span></div>
+        <span>{{ rating_counts.3|default:"0" }}</span>
+      </div>
+      <div class="review-bar-row">
+        <span>2★</span>
+        <div class="review-bar"><span style="width: {{ rating_2_percent|default:'0' }}%;"></span></div>
+        <span>{{ rating_counts.2|default:"0" }}</span>
+      </div>
+      <div class="review-bar-row">
+        <span>1★</span>
+        <div class="review-bar"><span style="width: {{ rating_1_percent|default:'0' }}%;"></span></div>
+        <span>{{ rating_counts.1|default:"0" }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="review-list-side" id="review-list">
+    <h3>Avis récents</h3>
+    {% for review in reviews %}
+      <div class="review-card">
+        <div class="review-head">
+<div class="review-author-box">
+{% if review.image %}
+  <img src="{{ review.image.url }}" alt="{{ review.name }}" class="review-avatar">
+{% else %}
+  <div class="review-avatar review-avatar-placeholder">
+    {{ review.user.username|default:review.name|default:"C"|slice:":1"|upper }}
+  </div>
+{% endif %}
+
+<div class="review-author-meta">
+  <span class="author">{{ review.user.username|default:review.name|default:"Client" }}</span>
+  <span class="date">{{ review.created_at|date:"d M Y" }}</span>
+</div>
+</div>
+</div>
+
+        <div class="stars-display">
+          {% for i in "12345" %}
+            <span class="s-star {% if forloop.counter <= review.rating %}filled{% endif %}">★</span>
+          {% endfor %}
+        </div>
+        <p class="comment-text">{{ review.comment }}</p>
+      </div>
+    {% empty %}
+      <p class="text-muted">Aucun avis pour le moment.</p>
+    {% endfor %}
+  </div>
+</div>
+    </div>
+</div>
+
+</div>
+<div class="fullscreen-modal" id="fullscreenModal">
+  <button class="close-fullscreen" id="closeFullscreen" type="button" aria-label="Fermer">&times;</button>
+  <img id="fullscreenImage" src="" alt="Image en plein écran">  Q   
+  <button class="fullscreen-nav-btn prev" id="prevFullscreen" type="button" aria-label="Image précédente">&#8249;</button>
+  <button class="fullscreen-nav-btn next" id="nextFullscreen" type="button" aria-label="Image suivante">&#8250;</button>
+  <div class="fullscreen-counter">
+    <span id="fullscreenCurrentIndex">1</span> / <span id="fullscreenTotalImages">{{ all_images|length }}</span>
+  </div>
+  <div class="fullscreen-thumbnails" id="fullscreenThumbnails" style="width: 80px; height: 80px; margin-top: 100px;">
+    {% for image in all_images %}
+      <img
+        src="{{ image.image.url }}"
+        alt="Miniature {{ forloop.counter }}"
+        class="fullscreen-thumb {% if forloop.first %}active{% endif %}"
+        data-index="{{ forloop.counter0 }}"
+        data-fullscreen="{{ image.image.url }}"
+      >
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/product_detail.js' %}"> </script>  {{block.super}}
+{% endblock %}

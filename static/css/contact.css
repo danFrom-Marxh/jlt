@@ -1,0 +1,145 @@
+   
+*{
+    color: #f3efe9;
+}
+
+   .contact-page {
+  --bg: #f7f4ef;
+  --bg-soft: #f3efe9;
+  --bg-white: #ffffff;
+  --bg-dark: #111111;
+  --text: #111111;
+  --text-soft: rgba(17, 17, 17, 0.72);
+  --text-muted: rgba(17, 17, 17, 0.52);
+  --border: rgba(17, 17, 17, 0.08);
+  --border-strong: rgba(17, 17, 17, 0.14);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 18px 50px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.12);
+  --radius-xs: 12px;
+  --radius-sm: 18px;
+  --radius-md: 24px;
+  --radius-lg: 32px;
+  --container: 1320px;
+
+  color: var(--text);
+  background: var(--bg-white);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  overflow-x: clip;
+}
+
+    .form-control{
+        border-radius: 10px;
+        border: none;
+        /* height: 25px; */
+        padding: 10px;
+        outline: none;
+        margin-bottom: 1px;
+        
+    }
+
+    
+
+    #div_id_message .form-control{
+        border-radius: 15px;
+        border: none;
+        height: 55px;
+        padding: 30px 10px 30px 10px;
+        outline: none;
+        width: 260px;
+    }
+
+    .btn-primary{
+        padding: 11px;
+        cursor: pointer;
+        border: none;
+        background: linear-gradient(135deg, #111 0%, #232323 100%);
+        border-radius: 5px;
+        color: beige;
+    }
+
+    .username, #div_id_username, #div_id_first_name, #div_id_last_name, #div_id_email, #div_id_phone_number, #div_id_message{
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        background: linear-gradient(135deg, #1e5057 0%, #232323 100%);
+        padding: 10px;
+        border-radius: 20px;
+        position: relative;
+    }
+
+    form input{
+        color: black;
+    }
+
+
+    form{
+        gap: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        background-color: #ffffff;
+        padding: 20px;
+        border-top-left-radius:  20px;
+        border-top-right-radius: 20px;
+        max-width: 800px;
+        /* position: relative; */
+        width: 100%;
+    }
+
+    .messages{
+        position: fixed;
+        background: rgb(4, 27, 12);
+        color: rgb(211, 205, 212) !important;
+        max-height: 150px;
+        max-width: 300px;
+        top: 160px;
+        text-align: center;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        z-index: 100000;
+    }
+
+    .alert{
+        color: rgb(211, 205, 212) !important;
+        font-size: 13px;
+        line-height: 1.5;
+        letter-spacing: 1px;
+        background-color: rgb(4, 22, 7);
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    #id_message{
+        color: black;
+        text-align: center;
+
+    }
+    
+
+
+
+    .card-header{
+        max-width: 1400px;
+        text-align: center;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .card-header h2{
+        color: #111111;
+        padding-top: 20px;
+    }
+
+
+    .card-body{
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+    }

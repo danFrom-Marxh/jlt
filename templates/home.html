@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="home-page">  
+  <section class="product-section">
+    <div class="site-shell">
+      <div class="product-toolbar">
+        <div class="product-grid-heading">
+          {% for cat in categories %}
+            {% if current_sort == cat.slug %}
+              <span class="eyebrow">{{ cat.name }}</span>
+            {% endif %}
+          {% endfor %}
+
+          <h2>Les pièces à forte désirabilité</h2>
+          <p>
+            Une sélection présentée avec davantage de lisibilité, de respiration
+            et de sophistication visuelle pour renforcer la perception premium.
+          </p>
+        </div>
+
+        <div id="filterDrawer" class="filter-drawer">
+          <div class="filter-content">
+            <label for="sortSelect" class="filter-label">Trier par</label>
+            <select class="hidden-filter" id="sortSelect" name="sort">
+              <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Prix croissant</option>
+              <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Prix décroissant</option>
+              <option value="name" {% if current_sort == 'name' %}selected{% endif %}>Nom</option>
+              {% for cat in categories %}
+                <option value="{{ cat.slug }}" data-url="{{ cat.slug }}" {% if current_sort == cat.slug|stringformat:"s" %}selected{% endif %}>
+                  {{ cat.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div id="prod_b" style="display: block;"></div>
+      </div>
+
+      <!-- =========================
+           PRODUCT GRID
+      ========================== -->
+      <div class="product-grid" id="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+          <a href="{% url 'product_detail' product.slug %}" class="product-media-link">
+            <div class="product-media">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+              {% if product.est_recent %}
+                <span class="product-badge">Nouveau</span>
+              {% endif %}
+              <button class="quick-view" type="button" aria-label="Aperçu rapide">
+                Aperçu rapide
+              </button>
+            </div>
+          </a>
+
+          <div class="product-info">
+            <div class="product-topline">
+              <span class="product-category">
+                {% if product.category %}
+                  {{ product.category.name }}
+                {% else %}
+                  Collection
+                {% endif %}
+              </span>
+
+              {% if product.average_rating %}
+                <span class="product-rating">★ {{ product.average_rating }}</span>
+              {% else %}
+                <span class="product-rating">★ 0</span>
+              {% endif %}
+            </div>
+
+            <h3>
+              <a href="{% url 'product_detail' product.slug %}">
+                {{ product.name }}
+              </a>
+            </h3>
+
+            <p class="product-desc">
+              Une présence visuelle forte, une ligne plus nette, une pièce pensée
+              pour installer du caractère dans la silhouette.
+            </p>
+
+            <div class="product-bottom">
+              <div class="price-wrap">
+                {% if product.old_price %}
+                  <span class="old-price">{{ product.old_price }}€</span>
+                {% endif %}
+                <span class="price">{{ product.price }}€</span>
+              </div>
+
+              <a href="{% url 'product_detail' product.slug %}" class="product-link">
+                Voir le produit
+              </a>
+            </div>
+          </div>
+        </article>
+        {% empty %}
+        <div class="empty-state">
+          <h3>Aucun produit disponible</h3>
+          <p>La collection sera bientôt mise à jour avec de nouvelles pièces.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    
+  </script>
+
+  <!-- =========================
+       PAGINATION
+  ========================== -->
+  {% if products.has_other_pages %}
+  <section class="pagination-section">
+    <div class="site-shell">
+      <nav class="pagination-wrapper">
+        <ul class="pagination">
+          {% for item in page_numbers %}
+            {% if item == '...' %}
+              <li class="page-item disabled">
+                <span class="page-link dots">...</span>
+              </li>
+            {% elif item == products.number %}
+              <li class="page-item active">
+                <span class="page-link">{{ item }}</span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?{{ query_params }}{% if query_params %}&{% endif %}page={{ item }}#product-grid">
+                  {{ item }}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if products.has_next and left_pages >= 4 and total_pages > 5 %}
+            <li class="page-item">
+              <a class="page-link" href="?{{ query_params }}{% if query_params %}&{% endif %}page={{ products.paginator.num_pages }}#product-grid">
+                Last
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </section>
+  {% endif %}
+
+
+  <!-- =========================
+       REVIEWS
+  ========================== -->
+  <section class="comments-section">
+    <div class="site-shell">
+      <div class="section-heading center">
+        <span class="section-kicker">Retours clients</span>
+        <h2>La confiance se construit aussi par la preuve sociale</h2>
+        <p>
+          Les avis structurent la crédibilité. Présentés proprement, ils renforcent
+          la perception de sérieux et réduisent les hésitations.
+        </p>
+      </div>
+
+      <div class="comments-carousel-wrapper">
+        <div class="comments-carousel" id="partners-carousel">
+          {% for r in reviews %}
+          <div class="comment-item">
+            <div class="comment-logo">
+              <div class="review-card">
+                <div class="review-head">
+                  {% if r.image %}
+                    <img src="{{ r.image.url }}" alt="{{ r.name }}" class="review-avatar">
+                  {% else %}
+                    <div class="review-avatar review-avatar-placeholder">
+                      {{ r.user.username|default:r.name|default:"C"|slice:":1"|upper }}
+                    </div>
+                  {% endif %}
+                  <span class="author">{{ r.name|default:"Client" }}</span>
+                  <span class="date">{{ r.created_at|date:"d M Y" }}</span>
+                </div>
+
+                <div class="stars-display">
+                  {% for i in "12345" %}
+                    <span class="s-star {% if forloop.counter <= r.rating %}filled{% endif %}">★</span>
+                  {% endfor %}
+                </div>
+
+                <p class="comment-text">{{ r.comment }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+          {% for r in reviews %}
+          <div class="comment-item">
+            <div class="comment-logo">
+              <div class="review-card">
+                <div class="review-head">
+                  {% if r.image %}
+                    <img src="{{ r.image.url }}" alt="{{ r.name }}" class="review-avatar">
+                  {% else %}
+                    <div class="review-avatar review-avatar-placeholder">
+                      {{ r.user.username|default:r.name|default:"C"|slice:":1"|upper }}
+                    </div>
+                  {% endif %}
+                  <span class="author">{{ r.name|default:"Client" }}</span>
+                  <span class="date">{{ r.created_at|date:"d M Y" }}</span>
+                </div>
+
+                <div class="stars-display">
+                  {% for i in "12345" %}
+                    <span class="s-star {% if forloop.counter <= r.rating %}filled{% endif %}">★</span>
+                  {% endfor %}
+                </div>
+
+                <p class="comment-text">{{ r.comment }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       FAQ
+  ========================== -->
+  <section class="faq-section">
+    <div class="site-shell faq-grid">
+      <div class="faq-intro">
+        <span class="section-kicker">Questions fréquentes</span>
+        <h2>Une section utile pour rassurer avant l’achat</h2>
+        <p>
+          Sur un site sérieux, certaines informations doivent être visibles.
+          Cette zone peut ensuite être reliée à tes vraies politiques de livraison,
+          retour, contact, délais et disponibilité.
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Comment se passe la commande ?</summary>
+          <p>
+            Le parcours doit rester simple, clair et rassurant, avec une lecture
+            fluide des étapes avant validation.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Puis-je obtenir de l’aide avant achat ?</summary>
+          <p>
+            Oui, une assistance humaine via WhatsApp ou un autre canal est idéale
+            pour augmenter la confiance et réduire les abandons.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Comment présenter mes garanties et services ?</summary>
+          <p>
+            Elles doivent apparaître dès la homepage, mais aussi sur les fiches produit,
+            le panier et le checkout.
+          </p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Pourquoi ajouter autant de sections sur l’accueil ?</summary>
+          <p>
+            Parce qu’un site premium vend aussi une image, une vision, une méthode
+            et une relation client, pas seulement un inventaire.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       NEWSLETTER / CTA FINAL
+  ========================== -->
+  <section class="final-cta-section">
+    <div class="site-shell final-cta-card">
+      <div class="final-cta-copy">
+        <span class="section-kicker">Dernier niveau de conversion</span>
+        <h2>Construire une marque plus forte, plus propre, plus crédible.</h2>
+        <p>
+          Une homepage premium doit inspirer confiance, installer le désir
+          et préparer le passage à l’achat dans un environnement sérieux.
+        </p>
+      </div>
+
+      <div class="final-cta-actions">
+        <a href="#prod_b" class="btn btn-dark">Explorer les produits</a>
+        <a href="{% url 'contact' %}" class="btn btn-light">Contacter la marque</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/home.js' %}"></script>
+{{ block.super }}
+{% endblock %}

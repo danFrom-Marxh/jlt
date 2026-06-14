@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="cart-page">
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Continue shopping -->
+    {% if cart_items %}
+    <a href="{% url 'home' %}#product-grid" class="btn btn-continue">
+        Continuez vos achats
+    </a>
+    {% endif %}
+
+    <!-- Cart Items -->
+    <div class="cart-content">
+        {% if cart_items %}
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ item.variant.primary_image }}" alt="{{ item.product.name }}">
+                <div class="item-details">
+                    <p class="item-name"> {{ item.product.name }} <b id="item_count" data-cart_item_id="{{ item.id }}">({{item.quantity}})</b></p>
+                    {% if item.color %}
+                    <p class="item-color">Couleur : {{ item.color.name }}</p>
+                    {% endif %}
+                    {% if item.variant %}
+                    <p class="item-variant">Variante: {{ item.variant.color.name }} {% if item.variant.size %} / {{ item.variant.size.name }} {% endif %}</p>
+                    {% endif %}
+                    <div class="item-actions">
+                        <a href="{% url 'update_cart' %}" id="update_cart" data-id="{{ item.id }}" action="increase" class="action-btn">+</a>
+                        <a href="{% url 'update_cart' %}" id="update_cart" data-id="{{ item.id }}" action="decrease" class="action-btn">-</a>
+                        <span class="item-subtotal" data-cart_item_id="{{ item.id }}">{{ item.get_subtotal }} <b>GBP</b></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="cart-total">
+               <span id="nb_item">({{ cart.get_items_count }}) items |</span> <span id="prix_total">Total : {{ cart.get_total }} <b>GBP</b></span>
+            </div>
+
+            <div class="cart-actions">
+                <a href="#" class="btn btn-primary">Passer au paiement</a>
+                <a href="#" id="checkout-whatsapp" class="btn btn-secondary">Commander sur WhatsApp</a>
+                <a href="{% url 'remove_cart' %}" class="btn btn-danger">Effacer le Panier</a>
+            </div>
+
+        {% else %}
+        <div class="empty-cart">
+            <h2>Votre panier est vide</h2>
+            <a href="{% url 'home' %}#product-grid" class="btn btn-primary">Voir les produits</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+
+    const WHATSAPP_NUMBER = "+24166569493";
+    const cart_items = [{% if cart_items %} 
+        {% for item in cart_items %} {
+        "image": "{{item.product.image.url}}",
+        "Nom" :
+            "{{ item.product.name }}" , 
+            {% if item.variant %}
+                "Variante" : {% if item.variant.color %} "{{ item.variant.color.name }} " {% endif %} {% if item.variant.size %}+ "| {{ item.variant.size.name }}" {% endif %}
+            {% endif %},
+            "Quantite" : " ({{item.quantity}}) ",
+
+            "Sous_total" : "{{ item.get_subtotal }} GBP"}
+            {% if not forloop.last %} ,{% endif %}
+        {% endfor %}
+    {%endif %}];
+    console.log("cart: ",  cart_items);
+
+
+document
+  .getElementById("checkout-whatsapp")
+  ?.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (cart_items.length === 0) {
+      showNotification("Votre panier est vide", "error");
+      return;
+    }
+
+    const itemCount = document.querySelectorAll(".item-details #item_count");
+    const itemSubtotal = document.querySelectorAll(".item-actions .item-subtotal")
+    let message = "Bonjour, je souhaite commander:\n\n";
+    cart_items.forEach((item,i) => {
+      message += `- ${item.Nom}`;
+      if (item.Variante) message += ` (${ item.Variante })`;
+      message += " x "+  itemCount[i].textContent + " = " + itemSubtotal[i].textContent +  ` \n `;
+    });
+
+    message +=`\n`;
+    message += document.getElementById("prix_total").textContent;
+    console.log("message : ", message)
+
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  });
+
+document
+  .getElementById("checkout-email")
+  ?.addEventListener("click", async function () {
+    if (cart_items.length === 0) {
+      showNotification("Votre panier est vide", "error");
+      return;
+    }
+
+    showLoading();
+
+    try {
+      const response = await fetch("/api/checkout-email/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify({ cart: cart }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification("Commande envoyée par email !", "success");
+      } else {
+        showNotification("Erreur lors de l'envoi", "error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showNotification("Une erreur est survenue", "error");
+    } finally {
+      hideLoading();
+    }
+  });
+</script>
+
+{% endblock %}
