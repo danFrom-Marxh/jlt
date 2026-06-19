@@ -64,10 +64,33 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Contact)
 admin.site.register(ProductImage)
 admin.site.register(Category)
-admin.site.register(Color)
+# admin.site.register(Color)
 admin.site.register(Review)
 admin.site.register(Size)
 admin.site.register(ProductVariant)
+
+@admin.register(Color)
+class ColorAdmin(admin.ModelAdmin):
+    list_display = [
+        'color_display',
+    ]
+
+    def color_display(self, obj):
+        """Affiche le stock avec code couleur"""
+        if obj.name =="rose":
+            return format_html(
+                '<span style="background: rgb(238, 153, 168); color: white; padding: 5px 12px; '
+                'border-radius: 12px; font-weight: 600;">{}</span>',
+                f'{obj.name}'  # ✅
+            )
+        else:
+            return format_html(
+                '<span style="color: black; padding: 5px 12px; '
+                'border-radius: 12px; font-weight: 600;">{}</span>',
+                f'{obj.name}'  # ✅
+            )
+            
+
 
 
 @admin.register(Cart)

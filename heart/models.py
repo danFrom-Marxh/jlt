@@ -215,10 +215,13 @@ class Cart(models.Model):
     session_key = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    code_promo = models.CharField(max_length=100)
     
     def get_total(self):
-        if self.user:
+        if self.code_promo in ["MALI10", "ML", "OH", "OVO"]:
             return sum(item.get_subtotal() for item in self.items.all())-(sum(item.get_subtotal() for item in self.items.all())*10)/100
+        elif self.code_promo in ["OMG"]:
+            return sum(item.get_subtotal() for item in self.items.all())-(sum(item.get_subtotal() for item in self.items.all())*50)/100
         return sum(item.get_subtotal() for item in self.items.all())
 
     def get_items_count(self):
@@ -252,12 +255,19 @@ class CartItem(models.Model):
 
 
 class Contact(models.Model):
+    session_key = models.CharField(max_length=100, blank=True, null=True)
     username = models.CharField(max_length=100, null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(max_length=100)
     phone_number = models.CharField(null=True, blank=True)
     message = models.TextField()
+    profil = models.ImageField(null=True, blank=True)
+    added_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    class meta:
+        ordering = ['-order']
 
     def __str__(self):
         if self.username:
@@ -269,6 +279,7 @@ class Contact(models.Model):
                 return f"message de {self.last_name}"
         
         return f"message de {self.email}"
+    
 
 
 class Review(models.Model):

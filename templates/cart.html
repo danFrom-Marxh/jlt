@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}Home{% endblock %}
 
@@ -12,7 +13,7 @@
 <div class="cart-page">
     <!-- Messages -->
     {% if messages %}
-    <div class="messages">
+    <div class="messages" id="messages">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
@@ -48,14 +49,21 @@
                 </div>
             </div>
             {% endfor %}
+          {% csrf_token %}
+          {% crispy form %}
 
             <div class="cart-total">
                <span id="nb_item">({{ cart.get_items_count }}) items |</span> <span id="prix_total">Total : {{ cart.get_total }} <b>GBP</b></span>
             </div>
 
+            <div id="promo_code_section">
+              code promo utilisé? {% if cart.code_promo == 'MALI10' or cart.code_promo == 'OMG' or cart.code_promo == "ML" or cart.code_promo == "OH" or cart.code_promo  == "OVO" %} <b id="code_yes">oui</b> <input id="code" type="hidden" value={{cart.code_promo}}> 
+              {% else %} <b id="code_no">non</b> {% endif %}
+            </div>
+
             <div class="cart-actions">
-                <a href="#" class="btn btn-primary">Passer au paiement</a>
-                <a href="#" id="checkout-whatsapp" class="btn btn-secondary">Commander sur WhatsApp</a>
+                <a href="#" class="btn btn-primary">Paiement</a>
+                <a href="#" id="checkout-whatsapp" class="btn btn-secondary">WhatsApp</a>
                 <a href="{% url 'remove_cart' %}" class="btn btn-danger">Effacer le Panier</a>
             </div>
 
@@ -71,6 +79,9 @@
 <script>
 
     const WHATSAPP_NUMBER = "+24166569493";
+    const yesCode = document.getElementById("code_yes");
+    const code = document.getElementById("code");
+    const noCode = document.getElementById("code_no");
     const cart_items = [{% if cart_items %} 
         {% for item in cart_items %} {
         "image": "{{item.product.image.url}}",
@@ -108,10 +119,16 @@ document
 
     message +=`\n`;
     message += document.getElementById("prix_total").textContent;
+    if(yesCode){
+      message+= " | vous avez utisé le code :"+ code.value;
+    }
+    if(noCode){
+      message+=" | Aucune réduction"
+    }
     console.log("message : ", message)
 
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    // window.open(whatsappUrl, "_blank");
   });
 
 document

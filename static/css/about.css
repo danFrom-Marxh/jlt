@@ -19,6 +19,7 @@
   color: var(--text);
   overflow-x: clip;
   font-family: "Helvetica Neue", Arial, sans-serif;
+  color:;
 }
 
 .about-page *,

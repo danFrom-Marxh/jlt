@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Tous les messages{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<style>
+    *{
+        color: #000;
+    }
+</style>
+<div style="background-color: aliceblue; padding: 30px;">
+    {% for contact in contacts %}
+    <div style="padding: 15px;" >
+        <div style="display: flex; gap: 15px; align-items: center;">
+            {% if contact.profil %}
+            <img src="{{contact.profil.url}}" alt="contact.first_name" style="width: 30px; height: 30px; border-radius: 50%;">
+        {% endif %}
+        <span style="font-size: 14px; color: rgb(11, 107, 67);">{{contact.first_name}}- (<span style="font-size: 12px;">{{contact.added_at}}</span>) </span>
+        </div>
+        <div style="display: block; height: 7px;"></div>
+        <p style="font-size: 16px;">{{contact.message}}</p>
+        {% if request.session.session_key == contact.session_key %}
+        <a href="{% url 'delete_message' %}" style="background-color: red; width: 20px; height: 8px;">supprimer</a>
+        {% endif %}
+        </div>
+
+        
+    <hr>
+    {% endfor %}
+</div>
+
+
+
+{% endblock %}

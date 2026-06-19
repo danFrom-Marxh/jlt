@@ -21,6 +21,8 @@ urlpatterns = [
     path('api/search-autocomplete/', search_autocomplete, name='search_autocomplete'),
     path('recherche/', search_view, name='search'),
     path("api/submit-review/", submit_review, name="submit_review"),
+    path("tout_les_messages/", tout_les_messages, name="tout_les_messages"),
+    path("delete_message/", supprimer_message, name="delete_message")
 ]
 
 if settings.DEBUG:

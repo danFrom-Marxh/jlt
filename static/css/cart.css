@@ -1,3 +1,6 @@
+*{
+    color: #0c500a;
+}
 .cart-page {
     max-width: 1200px;
     /* width: 100%; */
@@ -26,7 +29,7 @@
 
 .btn-continue{
     padding: 10px;
-    background-color: #227216;
+    background-color: #0b2e06;
     color: #e6e4e4;
 }
 
@@ -43,6 +46,7 @@
 .btn-danger {
     background-color: #e74c3c;
     color: #fff;
+    margin-left: 60%;
 }
 
 .btn:hover {
@@ -124,3 +128,35 @@
         flex-direction: row;
     }
 }
+
+
+    .addBt{
+        padding: 20px;
+        border-radius: 15px;
+        cursor: pointer;
+        border: none;
+        background-color: rgb(29, 44, 14);
+        color: aliceblue;
+        font-size: 13px;
+    }
+
+    .textarea{
+        /* height: 25px; */
+        width: 100px;
+        outline: none;
+        border-radius: 20px;
+        border: none;
+        padding: 5px;
+        background-color: #a9f5a2;
+    }
+
+    .addBt:hover{
+      transform: translateY(-2px);
+      transition: transform 0.3s ease;
+        
+    }
+
+    form{
+        display:flex;
+        gap: 30px;
+    }

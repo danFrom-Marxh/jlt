@@ -279,11 +279,29 @@ def product_reviews(request, product_slug):
 def cart(request):
     cart = get_or_create_cart(request)
     cart_items = cart.items.select_related('product', 'variant__color', 'variant__size')
+    form = CartForm()
+
+    if request.method == "POST":
+        com = CartForm(request.POST)
+        if com.is_valid():
+            message = com.save(commit=False)
+            cart.code_promo = message.code_promo
+            cart.save()
+            if cart.code_promo in ["MALI10", "ML", "OH", "OVO", "OMG"]:
+                messages.success(request, "Le code est validé")
+            else:
+                messages.error(request, "Le code n'est pas valide")
+            reverse('cart')
+            
+        else:
+            print(f"formulaire : {com}j;_ç")
+            
     context = {
         'cart': cart,
         'cart_items': cart_items,
         'cart_items_count': cart.get_items_count(),
-        'total_price': cart.get_total()
+        'total_price': cart.get_total(),
+        'form': form
     }
     return render(request, 'cart.html', context)
 
@@ -370,38 +388,49 @@ def contact(request):
     return render(request, 'contact.html', {'form': form, 'cart_items_count': cart.get_items_count(),})
 
 
-def contact_form_save(request): 
-    url = reverse("contact")
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
+def contact_form_save(request):
+    print("hello")
+    try:
+        # redirect_url = redirect("contact")
+        form = ContactForm(request.POST, request.FILES)
         if form.is_valid():
-            print(f"formulaire : {form.name}")
-            message = form.save(commit=False)
-            message.save()
+            contact = form.save(commit=False)
+            cont, created = Contact.objects.get_or_create(session_key=request.session.session_key, first_name=contact.username, email=contact.email, message=contact.message, profil=contact.profil)
+            # review.product = product
+            # contact.session_key=request.session.session_key
+            # contact.save()
+            if not created:
+                cont.save()
             return JsonResponse({
-                "success": True,
-                "redirect_url": redirect("contact"),
-                "message": "Votre message a été envoyé avec succès! Nous nous éfforcerons à vous répondre dans de bref délai"
-            })
-        else:
-            print(f"formulaire : {form}j;_ç")
-            return JsonResponse({
-                "success": False,
-                "redirect_url": url,
-                "message": "erreur lors de l'nregistrement du message"
-            })
-    else:
-        form = ContactForm()
-
-    if form.is_valid():
-        message = form.save(commit=False)
-        message.save()
-
-    return JsonResponse({
             "success": True,
-            "redirect_url": redirect("contact"),
+            "redirect_url": "http://127.0.0.1:8000/tout_les_messages",
             "message": "Votre message a été envoyé avec succès! Nous nous éfforcerons à vous répondre dans de bref délai"
-            })
+        })
+    
+
+        print("Erreurs formulaire :", form.errors)
+
+        return JsonResponse({
+            "success": False,
+            "message": "Formulaire invalide.",
+            "errors": form.errors
+        }, status=400)
+
+    except Exception as e:
+        redirect_url = redirect("contact")
+        print(str(e))
+    # print(f"formulaire : {form}j;_ç")
+        return JsonResponse({
+            "success": False,
+            "redirect_url": "http://127.0.0.1:8000/contact/",
+            "message": "erreur lors de l'nregistrement du message"
+        })
+
+    # return JsonResponse({
+    #         "success": True,
+    #         "redirect_url": redirect("contact"),
+    #         "message": "Votre message a été envoyé avec succès! Nous nous éfforcerons à vous répondre dans de bref délai"
+    #         })
 
 
 @require_GET
@@ -541,3 +570,16 @@ def submit_review(request):
         "message": "Formulaire invalide.",
         "errors": form.errors
     }, status=400)
+
+
+def tout_les_messages(request):
+    contacts = Contact.objects.order_by("-added_at")
+    ctx = {
+        "contacts":contacts
+    }
+    return render(request, 'messages.html', ctx)
+
+def supprimer_message(request):
+    Contact.objects.filter(session_key = request.session.session_key).delete()
+    # contact.delete()
+    return redirect('tout_les_messages')

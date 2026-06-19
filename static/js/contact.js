@@ -1,19 +1,24 @@
   const contactForm = document.querySelector(".contact-page form");
   contactForm?.addEventListener("submit", async function (e) {
     e.preventDefault();
-    console.log("message intercepté");
+    console.log("message intercepté : " );
 
     const formData = new FormData(contactForm);
+    if(formData){
+
+      console.log(formData)
+    }
 
     try {
       showLoading?.();
-
       const response = await fetch("/api/contact/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
             "X-CSRFToken": csrftoken,
         },
+        body: formData,
       });
 
     //   console.log("Réponse HTTP :", response.status);
@@ -22,18 +27,20 @@
       console.log("Réponse serveur :", data);
 
       if (data.success) {
-        contacForm.reset();
+        console.log("reset")
+        contactForm.reset();
 
         if (data.redirect_url) {
           showToast(data.message, "success")
+          window.location.href = data.redirect_url;
         }
       } else {
-        alert(data.message || "Erreur lors de l'enregistrement.");
+        // alert(data.message || "Erreur lors de l'enregistrement.");
         console.log(data.errors || {});
       }
     } catch (error) {
       console.error("Erreur submit review :", error);
-      alert("Une erreur JS ou réseau est survenue.");
+      // alert("Une erreur JS ou réseau est survenue.");
     } finally {
       hideLoading?.();
     }

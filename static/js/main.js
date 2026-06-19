@@ -18,6 +18,22 @@
   }
 }
 
+function initFlashMessages() {
+  const messages = document.getElementById('messages');
+  if (!messages) return;
+
+  requestAnimationFrame(() => {
+    messages.style.opacity = '1';
+    messages.style.transform = 'translateY(0)';
+  });
+
+  setTimeout(() => {
+    messages.style.opacity = '0';
+    messages.style.transform = 'translateY(-8px)';
+  }, 3200);
+}
+
+
 const messages = document.getElementById("messages");
 if(messages){
     messages.style.opacity="1";

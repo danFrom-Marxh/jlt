@@ -9,20 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
 /* =========================
    FLASH MESSAGES
 ========================= */
-function initFlashMessages() {
-  const messages = document.getElementById('messages');
-  if (!messages) return;
+// function initFlashMessages() {
+//   const messages = document.getElementById('messages');
+//   if (!messages) return;
 
-  requestAnimationFrame(() => {
-    messages.style.opacity = '1';
-    messages.style.transform = 'translateY(0)';
-  });
+//   requestAnimationFrame(() => {
+//     messages.style.opacity = '1';
+//     messages.style.transform = 'translateY(0)';
+//   });
 
-  setTimeout(() => {
-    messages.style.opacity = '0';
-    messages.style.transform = 'translateY(-8px)';
-  }, 3200);
-}
+//   setTimeout(() => {
+//     messages.style.opacity = '0';
+//     messages.style.transform = 'translateY(-8px)';
+//   }, 3200);
+// }
+
 
 /* =========================
    SORT SELECT

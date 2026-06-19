@@ -105,8 +105,14 @@
     }
 
     function goToSlide(index, animate = true) {
-      currentImageIndex = (index + totalImages) % totalImages;
-      renderCarousel(animate);
+      if (currentImageIndex >= totalImages){
+        currentImageIndex = totalImages
+      }
+      else if(currentImageIndex <= 0){
+        currentImageIndex = 0
+      }
+        currentImageIndex = (index + totalImages) % totalImages;
+        renderCarousel(animate);
     }
 
     function nextSlide() {
