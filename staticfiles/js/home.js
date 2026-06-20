@@ -1,84 +1,128 @@
-// const productCards = document.querySelectorAll('.product-card');
+document.addEventListener('DOMContentLoaded', () => {
+  initFlashMessages();
+  initSortSelect();
+  initProductTilt();
+  initQuickViewHoverState();
+  initFaqAccessibility();
+});
 
-//   productCards.forEach((card) => {
-//     card.addEventListener('mousemove', (e) => {
-//       const rect = card.getBoundingClientRect();
-//       const x = e.clientX - rect.left;
-//       const y = e.clientY - rect.top;
+/* =========================
+   FLASH MESSAGES
+========================= */
+// function initFlashMessages() {
+//   const messages = document.getElementById('messages');
+//   if (!messages) return;
 
-//       const rotateY = ((x / rect.width) - 0.5) * 6;
-//       const rotateX = ((y / rect.height) - 0.5) * -6;
-
-//       card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-//     });
-
-//     card.addEventListener('mouseleave', () => {
-//       card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)';
-//     });
+//   requestAnimationFrame(() => {
+//     messages.style.opacity = '1';
+//     messages.style.transform = 'translateY(0)';
 //   });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const productCards = document.querySelectorAll('.home-page .product-card');
+//   setTimeout(() => {
+//     messages.style.opacity = '0';
+//     messages.style.transform = 'translateY(-8px)';
+//   }, 3200);
+// }
 
-    if (isDesktop) {
-      productCards.forEach((card) => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
 
-          const rotateY = ((x / rect.width) - 0.5) * 6;
-          const rotateX = ((y / rect.height) - 0.5) * -6;
+/* =========================
+   SORT SELECT
+========================= */
+function initSortSelect() {
+  const sortSelect = document.getElementById('sortSelect');
+  if (!sortSelect) return;
 
-          card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-        });
+  sortSelect.addEventListener('change', () => {
+    const selectedOption = sortSelect.options[sortSelect.selectedIndex];
+    const selectedValue = selectedOption.dataset.url || sortSelect.value;
 
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = 'translateY(0)';
-        });
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', selectedValue);
+    url.searchParams.delete('page');
+    window.location.href = url.toString();
+  });
+}
+
+/* =========================
+   PRODUCT TILT
+========================= */
+function initProductTilt() {
+  const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!isDesktop) return;
+
+  const productCards = document.querySelectorAll('.home-page .product-card');
+
+  productCards.forEach((card) => {
+    let frameId = null;
+
+    const resetCard = () => {
+      card.style.transform = 'translateY(0)';
+    };
+
+    const onMove = (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const rotateY = ((x / rect.width) - 0.5) * 5.5;
+      const rotateX = ((y / rect.height) - 0.5) * -5.5;
+
+      if (frameId) cancelAnimationFrame(frameId);
+
+      frameId = requestAnimationFrame(() => {
+        card.style.transform = `
+          perspective(1000px)
+          rotateX(${rotateX}deg)
+          rotateY(${rotateY}deg)
+          translateY(-4px)
+        `;
       });
-    }
+    };
 
-    const messages = document.getElementById('messages');
-    if (messages) {
-      messages.style.opacity = '1';
+    const onLeave = () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      resetCard();
+    };
 
-      setTimeout(() => {
-        messages.style.opacity = '0';
-      }, 3000);
-    }
+    card.addEventListener('mousemove', onMove);
+    card.addEventListener('mouseleave', onLeave);
+  });
+}
 
-    const sortSelect = document.getElementById('sortSelect');
-    sortSelect?.addEventListener('change', () => {
-      const selectedOption = sortSelect.options[sortSelect.selectedIndex];
-      const selectedValue = selectedOption.dataset.url || sortSelect.value;
+/* =========================
+   QUICK VIEW UI STATE
+========================= */
+function initQuickViewHoverState() {
+  const quickButtons = document.querySelectorAll('.home-page .quick-view');
 
-      const url = new URL(window.location.href);
-      url.searchParams.set('sort', selectedValue);
-      window.location.href = url.toString();
+  quickButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const card = button.closest('.product-card');
+      const link = card?.querySelector('.product-info h3 a');
+
+      if (link) {
+        window.location.href = link.href;
+      }
     });
   });
+}
 
+/* =========================
+   FAQ ACCESSIBILITY
+========================= */
+function initFaqAccessibility() {
+  const faqItems = document.querySelectorAll('.home-page .faq-item');
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const sortSelect = document.getElementById('sortSelect');
-        // var optS = sortSelect.options[sortSelect.selectedIndex];
-        sortSelect?.addEventListener('change', () => {
-            var optS = sortSelect.options[sortSelect.selectedIndex];
-            var urlDest = optS.dataset.url;
-            console.log(urlDest);
-            if(urlDest){
-                const url = new URL(window.location);
-                url.searchParams.set('sort', optS.dataset.url);
-                console.log(url);
-                window.location.href = url.toString();
-            }
-            else{
-                const url = new URL(window.location);
-                url.searchParams.set('sort', sortSelect.value );
-                console.log(url);
-                window.location.href = url.toString();
-            }
-        });
+  faqItems.forEach((item) => {
+    item.addEventListener('toggle', () => {
+      if (!item.open) return;
+
+      faqItems.forEach((other) => {
+        if (other !== item) {
+          other.open = false;
+        }
+      });
     });
+  });
+}
