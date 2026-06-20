@@ -1,23 +1,3 @@
-  function selectColor(colorId) {
-    document.querySelectorAll('.color-display').forEach((el) => {
-      el.classList.remove('active');
-    });
-
-    const selected = document.getElementById(colorId);
-    if (selected) {
-      selected.classList.add('active');
-    }
-
-    const colorInput = document.querySelector(
-      'input[name="color"], select[name="color"], input[name="selected_color"], input[name="color_id"]'
-    );
-
-    if (colorInput) {
-      colorInput.value = colorId;
-      colorInput.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -44,6 +24,8 @@
     if (window.location.hash === '#reviews-content') {
       activateTab('#reviews-content');
     }
+
+  
 
     const mainImageContainer = document.getElementById('mainImageContainer');
     const carouselTrack = document.getElementById('carouselTrack');
@@ -123,8 +105,14 @@
     }
 
     function goToSlide(index, animate = true) {
-      currentImageIndex = (index + totalImages) % totalImages;
-      renderCarousel(animate);
+      if (currentImageIndex >= totalImages){
+        currentImageIndex = totalImages
+      }
+      else if(currentImageIndex <= 0){
+        currentImageIndex = 0
+      }
+        currentImageIndex = (index + totalImages) % totalImages;
+        renderCarousel(animate);
     }
 
     function nextSlide() {
@@ -360,3 +348,54 @@
 
     renderCarousel(false);
   });
+
+
+// stars 
+
+document.addEventListener("DOMContentLoaded", function () {
+  const container = document.getElementById("starRatingInput");
+  const ratingText = document.getElementById("ratingText");
+
+  if (!container) return;
+
+  const inputs = container.querySelectorAll('input[type="radio"]');
+  const labels = container.querySelectorAll("label");
+
+  function updateRatingText(value) {
+    if (!ratingText) return;
+    if (!value) ratingText.textContent = "Sélectionnez une note";
+    else ratingText.textContent = value === 1 ? "1 étoile" : value + " étoiles";
+  }
+
+  function paintStars(value) {
+    labels.forEach((label) => {
+      const starValue = parseInt(label.dataset.value, 10);
+      label.classList.toggle("filled", starValue <= value);
+    });
+    updateRatingText(value);
+  }
+
+  labels.forEach((label) => {
+    const value = parseInt(label.dataset.value, 10);
+
+    label.addEventListener("mouseenter", () => paintStars(value));
+    label.addEventListener("click", () => {
+      const relatedInput = document.getElementById("star" + value);
+      if (relatedInput) relatedInput.checked = true;
+      paintStars(value);
+    });
+  });
+
+  container.addEventListener("mouseleave", () => {
+    const checked = container.querySelector('input[type="radio"]:checked');
+    paintStars(checked ? parseInt(checked.value, 10) : 0);
+  });
+
+  inputs.forEach((input) => {
+    input.addEventListener("change", () => paintStars(parseInt(input.value, 10)));
+  });
+
+  // Initialisation si valeur déjà sélectionnée
+  const checked = container.querySelector('input[type="radio"]:checked');
+  paintStars(checked ? parseInt(checked.value, 10) : 0);
+});

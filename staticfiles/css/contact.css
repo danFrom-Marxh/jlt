@@ -1,6 +1,32 @@
-   *{
-        color: rgb(183, 189, 183);
-    }
+   
+*{
+    color: #f3efe9;
+}
+
+   .contact-page {
+  --bg: #f7f4ef;
+  --bg-soft: #f3efe9;
+  --bg-white: #ffffff;
+  --bg-dark: #111111;
+  --text: #111111;
+  --text-soft: rgba(17, 17, 17, 0.72);
+  --text-muted: rgba(17, 17, 17, 0.52);
+  --border: rgba(17, 17, 17, 0.08);
+  --border-strong: rgba(17, 17, 17, 0.14);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 18px 50px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.12);
+  --radius-xs: 12px;
+  --radius-sm: 18px;
+  --radius-md: 24px;
+  --radius-lg: 32px;
+  --container: 1320px;
+
+  color: var(--text);
+  background: var(--bg-white);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  overflow-x: clip;
+}
 
     .form-control{
         border-radius: 10px;
@@ -20,13 +46,14 @@
         height: 55px;
         padding: 30px 10px 30px 10px;
         outline: none;
+        width: 260px;
     }
 
     .btn-primary{
         padding: 11px;
         cursor: pointer;
         border: none;
-        background: rgb(7, 103, 182);
+        background: linear-gradient(135deg, #111 0%, #232323 100%);
         border-radius: 5px;
         color: beige;
     }
@@ -37,24 +64,15 @@
         gap: 6px;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 13px;
+        background: linear-gradient(135deg, #1e5057 0%, #0c110b 100%);
+        padding: 10px;
+        border-radius: 20px;
+        position: relative;
     }
 
     form input{
         color: black;
     }
-
-
-    /* .contain_message{
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        background-color: rgb(150, 156, 140);
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 14px;
-        max-width: 1400px;
-    } */
 
 
     form{
@@ -64,17 +82,14 @@
         align-items: center;
         text-align: center;
         justify-content: center;
-        background-color: rgba(4, 16, 31, 0.9);
+        background-color: #ffffff;
         padding: 20px;
         border-top-left-radius:  20px;
         border-top-right-radius: 20px;
-        max-width: 1000px;
+        max-width: 800px;
         /* position: relative; */
         width: 100%;
     }
-
-
-
 
     .messages{
         position: fixed;
@@ -87,6 +102,7 @@
         padding: 20px;
         opacity: 0;
         transition: opacity 0.8s ease;
+        z-index: 100000;
     }
 
     .alert{
@@ -102,17 +118,25 @@
     #id_message{
         color: black;
         text-align: center;
+
     }
+    
+
+
 
     .card-header{
         max-width: 1400px;
         text-align: center;
-        margin-top: 20px;
         font-family: "Helvetica Neue", Arial, sans-serif;
     }
 
-    .card-body{
+    .card-header h2{
+        color: #111111;
+        padding-top: 20px;
+    }
 
+
+    .card-body{
         gap: 10px;
         display: flex;
         flex-direction: column;
