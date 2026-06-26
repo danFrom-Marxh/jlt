@@ -424,7 +424,7 @@ def contact_form_save(request):
         return JsonResponse({
             "success": False,
             "redirect_url": url,
-            message": "erreur lors de l'nregistrement du message"
+            "message": "erreur lors de l'nregistrement du message"
         })
 
     # return JsonResponse({
