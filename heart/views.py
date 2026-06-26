@@ -389,6 +389,7 @@ def contact(request):
 
 
 def contact_form_save(request):
+    url = reverse('contact')
     print("hello")
     try:
         # redirect_url = redirect("contact")
@@ -403,7 +404,7 @@ def contact_form_save(request):
                 cont.save()
             return JsonResponse({
             "success": True,
-            "redirect_url": redirect('contact'),
+            "redirect_url": url,
             "message": "Votre message a été envoyé avec succès! Nous nous éfforcerons à vous répondre dans de bref délai"
         })
     
@@ -422,8 +423,8 @@ def contact_form_save(request):
     # print(f"formulaire : {form}j;_ç")
         return JsonResponse({
             "success": False,
-            "redirect_url": "http://127.0.0.1:8000/contact/",
-            "message": "erreur lors de l'nregistrement du message"
+            "redirect_url": url,
+            message": "erreur lors de l'nregistrement du message"
         })
 
     # return JsonResponse({
