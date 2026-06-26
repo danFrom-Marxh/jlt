@@ -519,7 +519,7 @@ input::placeholder{
         justify-content: space-between;
         color: rgb(216, 211, 211);
         /* background: linear-gradient(to bottom, rgb(131, 160, 51) 0%, rgba(131, 160, 51, 0) 100%); */
-        background-color: rgb(162, 165, 162);
+        background-color: white;
         align-items: center;
         z-index: 2000;
     }
