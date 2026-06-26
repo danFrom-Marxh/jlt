@@ -403,7 +403,7 @@ def contact_form_save(request):
                 cont.save()
             return JsonResponse({
             "success": True,
-            "redirect_url": "http://127.0.0.1:8000/tout_les_messages",
+            "redirect_url": redirect('contact'),
             "message": "Votre message a été envoyé avec succès! Nous nous éfforcerons à vous répondre dans de bref délai"
         })
     
