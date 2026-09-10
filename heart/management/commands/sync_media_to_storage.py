@@ -5,7 +5,6 @@ from django.core.files import File
 from django.core.files.storage import default_storage
 from django.core.management.base import BaseCommand, CommandError
 
-
 class Command(BaseCommand):
     help = "Copie les fichiers présents dans MEDIA_ROOT vers le stockage Django par défaut (ex. Cloudflare R2)."
 
