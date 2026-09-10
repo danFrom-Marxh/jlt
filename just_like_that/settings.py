@@ -18,7 +18,8 @@ environ.Env.read_env(BASE_DIR / ".env")
 
 # Core / security
 SECRET_KEY = env("SECRET_KEY", default="django-insecure-change-me-before-production")
-DEBUG = env.bool("DEBUG", default=True)
+# DEBUG = env.bool("DEBUG", default=True)
+DEBUG = True
 
 ALLOWED_HOSTS = env.list(
     "ALLOWED_HOSTS",
