@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Recherche — {{ store_name }}{% endblock %}
+{% block robots %}noindex,follow{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/ecommerce.css' %}">{% endblock %}
+{% block content %}<div class="store-page search-results-page"><section class="catalog-hero"><div class="site-width"><span class="eyebrow">Recherche</span><h1>{% if query %}Résultats pour “{{ query }}”{% else %}Rechercher un produit{% endif %}</h1><p>{{ total_results }} résultat{{ total_results|pluralize }}</p></div></section><section class="site-width store-section compact-section"><div class="product-grid">{% for product in products %}{% include 'partials/product_card.html' with product=product %}{% empty %}<div class="empty-state"><i class="bi bi-search"></i><h2>Aucun résultat</h2><p>Essayez un autre mot-clé ou parcourez le catalogue.</p><a class="btn btn-primary" href="{% url 'catalog' %}">Explorer la boutique</a></div>{% endfor %}</div></section></div>{% endblock %}

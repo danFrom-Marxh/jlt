@@ -1,0 +1,170 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="color-scheme" content="light">
+  <title>{% block title %}{{ store_name }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ site_description }}{% endblock %}">
+  <meta name="robots" content="{% block robots %}index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1{% endblock %}">
+  <link rel="canonical" href="{% block canonical %}{{ canonical_url }}{% endblock %}">
+
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="{{ store_name }}">
+  <meta property="og:title" content="{% block og_title %}{{ store_name }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ site_description }}{% endblock %}">
+  <meta property="og:url" content="{% block og_url %}{{ canonical_url }}{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{{ default_social_image_url }}{% endblock %}">
+  <meta property="og:image:alt" content="{% block og_image_alt %}{{ store_name }}{% endblock %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% block twitter_title %}{{ store_name }}{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}{{ site_description }}{% endblock %}">
+  <meta name="twitter:image" content="{% block twitter_image %}{{ default_social_image_url }}{% endblock %}">
+
+  <link rel="icon" href="{% static 'brand/favicon.ico' %}" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="{% static 'brand/logo-mark.svg' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'brand/favicon-32.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'brand/apple-touch-icon.png' %}">
+  <link rel="manifest" href="{% static 'brand/site.webmanifest' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <script type="application/ld+json">{{ organization_schema_json|safe }}</script>
+  <script type="application/ld+json">{{ website_schema_json|safe }}</script>
+  {% block structured_data %}{% endblock %}
+  {% block css %}{% endblock %}
+</head>
+<body>
+  <form hidden>{% csrf_token %}</form>
+
+  <div id="loading-spinner" class="loading-spinner hidden" aria-hidden="true"><span></span></div>
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+
+  <div class="announcement-bar">
+    <div class="site-width announcement-inner">
+      <span><i class="bi bi-truck"></i> Livraison suivie</span>
+      <span class="announcement-center">-10% avec le code <strong>OVO</strong></span>
+      <span><i class="bi bi-shield-check"></i> Paiement sécurisé</span>
+    </div>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="site-width header-main">
+      <button class="icon-button mobile-menu-button" id="menuToggle" aria-label="Ouvrir le menu"><i class="bi bi-list"></i></button>
+      <a class="brand" href="{% url 'home' %}">
+        <img class="brand-logo" src="{% static 'brand/logo-mark.svg' %}" width="36" height="36" alt=""><span class="brand-name">Just Like That</span>
+      </a>
+      <nav class="desktop-nav" aria-label="Navigation principale">
+        <a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Accueil</a>
+        <a class="{% if '/boutique/' in request.path or '/categorie/' in request.path %}active{% endif %}" href="{% url 'catalog' %}">Boutique</a>
+        <a href="{% url 'services' %}">Services</a>
+        <a href="{% url 'apropos' %}">À propos</a>
+        <a href="{% url 'contact' %}">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-button" id="searchToggle" aria-label="Rechercher"><i class="bi bi-search"></i></button>
+        <button class="icon-button cart-trigger" id="cartToggle" aria-label="Ouvrir le panier">
+          <i class="bi bi-bag"></i><span class="cart-count" id="badge">{{ cart_items_count|default:0 }}</span>
+        </button>
+      </div>
+    </div>
+    <div class="category-strip">
+      <div class="site-width category-strip-inner">
+        <a href="{% url 'catalog' %}">Tous les produits</a>
+        {% for category in nav_categories %}<a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>{% endfor %}
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <div class="mobile-nav-head"><strong>Menu</strong><button id="mobileNavClose" aria-label="Fermer">&times;</button></div>
+    <a href="{% url 'home' %}">Accueil</a><a href="{% url 'catalog' %}">Boutique</a><a href="{% url 'services' %}">Services</a><a href="{% url 'apropos' %}">À propos</a><a href="{% url 'contact' %}">Contact</a>
+    <div class="mobile-nav-categories"><small>Catégories</small>{% for category in nav_categories %}<a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>{% endfor %}</div>
+  </div>
+  <div class="page-overlay" id="pageOverlay"></div>
+
+  <div class="search-panel" id="searchPanel" aria-hidden="true">
+    <div class="search-panel-card">
+      <div class="search-panel-top">
+        <span><i class="bi bi-search"></i></span>
+        <form action="{% url 'search' %}" method="get"><input id="globalSearchInput" name="q" type="search" placeholder="Que recherchez-vous ?" autocomplete="off"></form>
+        <button id="searchClose" aria-label="Fermer">&times;</button>
+      </div>
+      <div id="autocompleteResults" class="autocomplete-results"></div>
+      <p class="search-hint">Essayez “robe”, “chaise”, “sac”…</p>
+    </div>
+  </div>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="cart-drawer-head">
+      <div><span class="eyebrow">Votre sélection</span><h2>Panier <span id="drawerCount">({{ cart_items_count|default:0 }})</span></h2></div>
+      <button id="cartClose" class="drawer-close" aria-label="Fermer le panier">&times;</button>
+    </div>
+    <div id="drawerItems" class="drawer-items"><div class="drawer-loading">Chargement du panier…</div></div>
+    <div class="cart-drawer-footer" id="drawerFooter">
+      <div class="drawer-total"><span>Total</span><strong id="drawerTotal">0 {{ store_currency_symbol }}</strong></div>
+      <p>Taxes et livraison calculées au paiement.</p>
+      <a class="btn btn-primary btn-block" href="{% url 'cart' %}">Voir le panier complet</a>
+      <button class="btn btn-secondary btn-block js-stripe-checkout" data-source="cart">Payer maintenant <i class="bi bi-arrow-right"></i></button>
+    </div>
+  </aside>
+
+  {% if messages %}<div class="flash-wrap" id="messages">{% for message in messages %}<div class="flash flash-{{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+
+  <main id="base_container" class="container main-content">{% block content %}{% endblock %}</main>
+
+  {% block footer %}
+  <footer class="site-footer">
+    <div class="site-width footer-grid">
+      <div class="footer-brand"><a class="brand brand-light" href="{% url 'home' %}"><img class="brand-logo brand-logo-light" src="{% static 'brand/logo-mark-light.svg' %}" width="36" height="36" alt=""><span class="brand-name">Just Like That</span></a><p>Une boutique pensée pour acheter simplement, rapidement et en toute confiance.</p></div>
+      <div><h4>Explorer</h4><a href="{% url 'catalog' %}">Tous les produits</a>{% for category in nav_categories|slice:':4' %}<a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>{% endfor %}</div>
+      <div><h4>Informations</h4><a href="{% url 'services' %}">Services</a><a href="{% url 'apropos' %}">À propos</a><a href="{% url 'contact' %}">Contact</a><a href="{% url 'weather' %}">Météo</a></div>
+      <div><h4>Paiement sécurisé</h4><p>Transactions protégées par Stripe. Les données de carte ne transitent pas par notre serveur.</p><div class="payment-badges"><span>VISA</span><span>MC</span><span>Stripe</span></div></div>
+    </div>
+    <div class="site-width footer-bottom"><span>© {% now 'Y' %} {{ store_name }}.</span><div class="footer-legal-actions"><button type="button" class="footer-cookie-link" id="openCookiePreferences">Préférences cookies</button><span>Design e-commerce nouvelle génération.</span></div></div>
+  </footer>
+  {% endblock %}
+
+  <button class="scroll-top-button" id="scrollTopButton" type="button" aria-label="Remonter en haut de la page"><i class="bi bi-arrow-up"></i></button>
+
+  <div class="site-modal-layer" id="cookieModal" aria-hidden="true">
+    <div class="site-modal-backdrop"></div>
+    <section class="site-modal-card cookie-card" role="dialog" aria-modal="true" aria-labelledby="cookieTitle">
+      <div class="modal-icon"><i class="bi bi-shield-check"></i></div>
+      <span class="eyebrow">Votre confidentialité</span>
+      <h2 id="cookieTitle">Des cookies, avec transparence.</h2>
+      <p>Nous utilisons les cookies nécessaires au panier, à la session et à la sécurité du site. Vous pouvez accepter l’expérience complète ou conserver uniquement les cookies essentiels.</p>
+      <div class="cookie-points"><span><i class="bi bi-lock"></i> Paiement et session sécurisés</span><span><i class="bi bi-sliders"></i> Préférences mémorisées</span></div>
+      <div class="site-modal-actions"><button class="btn btn-secondary" type="button" data-cookie-choice="essential">Essentiels uniquement</button><button class="btn btn-primary" type="button" data-cookie-choice="accepted">Accepter</button></div>
+    </section>
+  </div>
+
+  <div class="site-modal-layer" id="newsletterModal" aria-hidden="true">
+    <div class="site-modal-backdrop" data-newsletter-close></div>
+    <section class="site-modal-card newsletter-popup-card" role="dialog" aria-modal="true" aria-labelledby="newsletterTitle">
+      <button class="site-modal-close" type="button" data-newsletter-close aria-label="Fermer">&times;</button>
+      <div class="newsletter-offer-badge">-8%</div>
+      <span class="eyebrow">Bienvenue chez JLT</span>
+      <h2 id="newsletterTitle">8 % offerts sur votre prochaine commande.</h2>
+      <p>Recevez nos nouveautés et sélections. Votre code de remise apparaît immédiatement après l’inscription.</p>
+      <form class="js-newsletter-form newsletter-popup-form">
+        <label for="newsletterPopupEmail">Votre adresse e-mail</label>
+        <input id="newsletterPopupEmail" type="email" name="email" autocomplete="email" required placeholder="vous@exemple.com">
+        <button class="btn btn-primary btn-block" type="submit">Recevoir mon code -8 % <i class="bi bi-arrow-right"></i></button>
+        <small>Votre e-mail est utilisé uniquement pour les communications de la boutique.</small>
+      </form>
+    </section>
+  </div>
+
+  <script>window.JLT={currencySymbol:"{{ store_currency_symbol|escapejs }}",cartUrl:"{% url 'cart' %}",cartSummaryUrl:"{% url 'cart_summary' %}",checkoutUrl:"{% url 'create_checkout_session' %}",searchApi:"{% url 'search_autocomplete' %}",newsletterUrl:"{% url 'newsletter_subscribe' %}"};</script>
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

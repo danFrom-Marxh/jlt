@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">JLT</title>
+  <rect width="512" height="512" rx="142" fill="#111111"/>
+  <path d="M121 137h61v176c0 43-24 69-67 69-18 0-35-4-49-12l18-48c8 4 16 6 24 6 9 0 13-6 13-19V137Z" fill="#ffffff"/>
+  <path d="M210 137h61v188h92v54H210V137Z" fill="#ffffff"/>
+  <path d="M302 137h145v54h-42v188h-61V191h-42v-54Z" fill="#ffffff"/>
+  <circle cx="419" cy="104" r="19" fill="#a9ff7a"/>
+</svg>

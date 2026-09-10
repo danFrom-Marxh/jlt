@@ -1,0 +1,6 @@
+<section class="store-section">
+  <div class="site-width">
+    <div class="section-heading"><div><span class="eyebrow">{{ eyebrow }}</span><h2>{{ title }}</h2>{% if subtitle %}<p>{{ subtitle }}</p>{% endif %}</div><a class="text-link" href="{% url 'catalog' %}">Tout voir <i class="bi bi-arrow-right"></i></a></div>
+    <div class="product-grid">{% for product in products %}{% include 'partials/product_card.html' with product=product %}{% empty %}<div class="empty-inline">Les produits apparaîtront ici dès qu'ils seront ajoutés.</div>{% endfor %}</div>
+  </div>
+</section>

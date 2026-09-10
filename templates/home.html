@@ -1,0 +1,84 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}{{ store_name }} — Boutique en ligne{% endblock %}
+{% block meta_description %}Découvrez les nouveautés, meilleures ventes et produits préférés de la communauté {{ store_name }}, avec paiement sécurisé et expérience d’achat fluide.{% endblock %}
+{% block og_title %}{{ store_name }} — Simple. Élégante. Utile.{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/ecommerce.css' %}">{% endblock %}
+{% block content %}
+<div class="store-page home-store">
+  <section class="hero-commerce">
+    <div class="site-width hero-grid">
+      <div class="hero-copy"><span class="eyebrow eyebrow-light">Une sélection qui vous ressemble</span><h1>Des produits qui font la différence, <em>just like that.</em></h1><p>Découvrez nos nouveautés, les favoris de la communauté et une expérience d'achat fluide jusqu'au paiement.</p><div class="hero-actions"><a class="btn btn-white" href="{% url 'catalog' %}">Découvrir la boutique <i class="bi bi-arrow-right"></i></a><a class="hero-link" href="#tendances">Voir les tendances</a></div><div class="hero-stats"><div><strong>{{ product_count }}</strong><span>produits</span></div><div><strong>{{ review_count }}</strong><span>avis clients</span></div><div><strong>100%</strong><span>paiement sécurisé</span></div></div></div>
+      <div class="hero-visual"><div class="hero-image hero-image-main"><img src="{% static 'images/2.jpg' %}" alt="Collection Just Like That" decoding="async" fetchpriority="high"></div><div class="hero-image hero-image-small"><img src="{% static 'images/6.jpg' %}" alt="Sélection mode" loading="lazy" decoding="async"></div><div class="floating-card"><span>Collection du moment</span><strong>Simple. Élégante. Utile.</strong><a href="{% url 'catalog' %}">Explorer <i class="bi bi-arrow-up-right"></i></a></div></div>
+    </div>
+  </section>
+
+  <section class="benefits"><div class="site-width benefits-grid"><div><i class="bi bi-lightning-charge"></i><span><strong>Achat rapide</strong><small>Ajout au panier instantané</small></span></div><div><i class="bi bi-credit-card"></i><span><strong>Paiement Stripe</strong><small>Carte et moyens compatibles</small></span></div><div><i class="bi bi-box-seam"></i><span><strong>Suivi simplifié</strong><small>Une commande claire de A à Z</small></span></div><div><i class="bi bi-chat-heart"></i><span><strong>Avis vérifiés</strong><small>La communauté vous guide</small></span></div></div></section>
+
+  <section class="category-showcase"><div class="site-width"><div class="section-heading"><div><span class="eyebrow">Explorer</span><h2>Achetez par catégorie</h2><p>Allez directement vers ce qui vous intéresse.</p></div><a class="text-link" href="{% url 'catalog' %}">Toutes les catégories <i class="bi bi-arrow-right"></i></a></div><div class="category-grid">{% for category in categories %}<a class="category-card" href="{% url 'category_products' category.slug %}"><span class="category-icon"><i class="bi bi-grid"></i></span><div><strong>{{ category.name }}</strong><small>{{ category.product_count }} produit{{ category.product_count|pluralize }}</small></div><i class="bi bi-arrow-up-right category-arrow"></i></a>{% endfor %}</div></div></section>
+
+  <div id="tendances"></div>
+  {% include 'partials/product_section.html' with eyebrow='À découvrir' title='Nouveautés' subtitle='Les dernières pièces ajoutées à la boutique.' products=newest_products %}
+  <section class="editorial-banner"><div class="site-width editorial-inner"><div><span class="eyebrow eyebrow-light">Notre sélection</span><h2>Le bon produit, au bon moment.</h2><p>Des essentiels choisis pour leur style, leur utilité et leur capacité à durer.</p><a class="btn btn-white" href="{% url 'catalog' %}">Voir la sélection</a></div><img src="{% static 'images/1.jpg' %}" alt="Sélection éditoriale"></div></section>
+  {% include 'partials/product_section.html' with eyebrow='Tendance' title=bestseller_title subtitle='Les produits qui attirent le plus nos clients.' products=bestseller_products %}
+  {% include 'partials/product_section.html' with eyebrow='Communauté' title='Les plus appréciés' subtitle='Les mieux notés par celles et ceux qui les ont découverts.' products=loved_products %}
+  {% include 'partials/product_section.html' with eyebrow='Sélection JLT' title='Nos coups de cœur' subtitle='Une sélection mise en avant par la boutique.' products=featured_products %}
+
+  <section class="testimonials-section" aria-labelledby="testimonials-title">
+    <div class="site-width testimonials-head">
+      <div><span class="eyebrow">Ils en parlent mieux que nous</span><h2 id="testimonials-title">Les mots de nos clients.</h2></div>
+      <p>Des avis laissés sur les produits de la boutique. Survolez le défilement pour le mettre en pause.</p>
+    </div>
+    {% if home_reviews %}
+      <div class="testimonials-marquee" tabindex="0" aria-label="Avis clients défilants">
+        <div class="testimonials-track">
+          <div class="testimonial-set">
+            {% for review in home_reviews %}
+              <article class="testimonial-card">
+                <div class="testimonial-card-top"><a class="testimonial-product" href="{% url 'product_detail' review.product.slug %}">{{ review.product.name }}</a><span class="testimonial-rating">{% include 'partials/star_rating.html' with rating=review.rating %}<small>{{ review.rating }}/5</small></span></div>
+                <blockquote>“{{ review.comment|truncatechars:180 }}”</blockquote>
+                <div class="testimonial-author"><strong>{{ review.name|default:'Client' }}</strong><span>{{ review.created_at|date:'d M Y' }}</span></div>
+              </article>
+            {% endfor %}
+          </div>
+          <div class="testimonial-set" aria-hidden="true">
+            {% for review in home_reviews %}
+              <article class="testimonial-card">
+                <div class="testimonial-card-top"><span class="testimonial-product">{{ review.product.name }}</span><span class="testimonial-rating">{% include 'partials/star_rating.html' with rating=review.rating %}<small>{{ review.rating }}/5</small></span></div>
+                <blockquote>“{{ review.comment|truncatechars:180 }}”</blockquote>
+                <div class="testimonial-author"><strong>{{ review.name|default:'Client' }}</strong><span>{{ review.created_at|date:'d M Y' }}</span></div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="testimonials-empty">Les avis approuvés apparaîtront ici automatiquement.</div>
+    {% endif %}
+  </section>
+
+  <section class="store-location-section" aria-labelledby="store-location-title">
+    <div class="site-width store-location-card">
+      <div class="store-location-copy">
+        <span class="eyebrow eyebrow-light">Nous trouver</span>
+        <h2 id="store-location-title">Passez nous voir en magasin.</h2>
+        <p>Repérez facilement la boutique, préparez votre trajet et retrouvez-nous directement sur Google Maps.</p>
+        {% if store_address %}
+          <div class="store-location-address"><i class="bi bi-geo-alt-fill"></i><span>{{ store_address }}</span></div>
+          <a class="btn btn-white" href="https://www.google.com/maps/search/?api=1&amp;query={{ store_address|urlencode }}" target="_blank" rel="noopener noreferrer">Ouvrir dans Google Maps <i class="bi bi-arrow-up-right"></i></a>
+        {% else %}
+          <div class="store-location-address"><i class="bi bi-geo-alt-fill"></i><span>Adresse du magasin à renseigner via <strong>STORE_ADDRESS</strong>.</span></div>
+        {% endif %}
+      </div>
+      <div class="store-location-map">
+        {% if store_address and google_maps_embed_api_key %}
+          <iframe title="Localisation de {{ store_name }}" src="https://www.google.com/maps/embed/v1/place?key={{ google_maps_embed_api_key|urlencode }}&amp;q={{ store_address|urlencode }}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        {% else %}
+          <div class="store-location-placeholder"><div><i class="bi bi-map"></i><strong>Google Maps prêt à être affiché</strong><span>Ajoutez <code>STORE_ADDRESS</code> et <code>GOOGLE_MAPS_EMBED_API_KEY</code> dans l’environnement pour activer automatiquement la carte.</span></div></div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="newsletter-section"><div class="site-width newsletter-card"><div><span class="eyebrow eyebrow-light">Avantage newsletter</span><h2>8 % offerts sur votre prochaine commande.</h2><p>Inscrivez-vous pour recevoir les nouveautés et obtenir immédiatement votre code de remise de 8 %.</p></div><form class="js-newsletter-form"><input type="email" name="email" required autocomplete="email" placeholder="votre@email.com" aria-label="Votre adresse e-mail"><button class="btn btn-white" type="submit">Obtenir -8 % <i class="bi bi-arrow-right"></i></button></form></div></section>
+</div>
+{% endblock %}

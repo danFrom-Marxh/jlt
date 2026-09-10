@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Paiement confirmé — {{ store_name }}{% endblock %}
+{% block robots %}noindex,nofollow{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/ecommerce.css' %}">{% endblock %}
+{% block content %}
+<div class="checkout-status-page"><div class="status-card success"><div class="status-icon"><i class="bi bi-check-lg"></i></div><span class="eyebrow">Commande confirmée</span><h1>Merci pour votre achat.</h1>
+{% if payment and payment.status == 'paid' %}
+  <p>Votre paiement de <strong>{{ payment.amount_total|floatformat:2 }} {{ store_currency_symbol }}</strong> a été confirmé.</p>
+  {% if payment.receipt_sent_at and payment.customer_email %}<p class="receipt-status success"><i class="bi bi-envelope-check"></i> Votre reçu a été envoyé à <strong>{{ payment.customer_email }}</strong>.</p>
+  {% elif payment.customer_email %}<p class="receipt-status pending"><i class="bi bi-envelope"></i> Votre commande est bien validée. Si le reçu n’arrive pas dans votre boîte de réception, vérifiez les indésirables ou contactez notre support.</p>{% endif %}
+{% elif stripe_error %}<p>{{ stripe_error }}</p>{% else %}<p>Nous vérifions la confirmation du paiement.</p>{% endif %}
+<div class="status-actions"><a class="btn btn-primary" href="{% url 'catalog' %}">Continuer mes achats</a><a class="btn btn-secondary" href="{% url 'home' %}">Retour à l'accueil</a></div></div></div>
+{% endblock %}

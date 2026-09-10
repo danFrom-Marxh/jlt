@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Votre reçu {{ store_name }}</title></head>
+<body style="margin:0;background:#f5f4f1;color:#171717;font-family:Arial,sans-serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f4f1;padding:32px 12px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e8e5de;">
+        <tr><td style="background:#111111;color:#ffffff;padding:28px 32px;"><div style="font-weight:800;font-size:20px;letter-spacing:-.5px;">JLT · {{ store_name }}</div><div style="margin-top:7px;color:#bdbdb8;font-size:13px;">Reçu de paiement</div></td></tr>
+        <tr><td style="padding:32px;">
+          <h1 style="margin:0 0 10px;font-size:26px;line-height:1.2;">Merci pour votre achat.</h1>
+          <p style="margin:0 0 24px;color:#666;line-height:1.6;font-size:14px;">Votre paiement a bien été confirmé. Conservez cet e-mail comme reçu de votre commande.</p>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-bottom:24px;">
+            {% for item in items %}
+            <tr>
+              <td style="padding:13px 0;border-bottom:1px solid #ece9e3;font-size:14px;"><strong>{{ item.product_name }}</strong><br><span style="color:#777;font-size:12px;">Quantité : {{ item.quantity }}</span></td>
+              <td align="right" style="padding:13px 0;border-bottom:1px solid #ece9e3;font-size:14px;white-space:nowrap;">{{ item.unit_price|floatformat:2 }} {{ store_currency_symbol }} × {{ item.quantity }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f7f5f1;border-radius:14px;padding:4px 16px;">
+            <tr><td style="padding:15px 0;font-size:14px;color:#666;">Référence</td><td align="right" style="padding:15px 0;font-size:12px;">{{ payment.stripe_session_id }}</td></tr>
+            <tr><td style="padding:0 0 15px;font-size:16px;font-weight:700;">Total payé</td><td align="right" style="padding:0 0 15px;font-size:20px;font-weight:800;">{{ payment.amount_total|floatformat:2 }} {{ store_currency_symbol }}</td></tr>
+          </table>
+          <p style="margin:24px 0 0;color:#777;font-size:12px;line-height:1.6;">Une question concernant votre commande ? Contactez-nous à {{ support_email }}.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

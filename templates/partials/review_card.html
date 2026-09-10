@@ -1,0 +1,8 @@
+<article class="review-card">
+  <div class="review-card-top">
+    <strong>{{ review.name|default:'Client' }}</strong>
+    {% include 'partials/star_rating.html' with rating=review.rating %}
+  </div>
+  <p>{{ review.comment }}</p>
+  <small>{{ review.created_at|date:'d M Y' }}</small>
+</article>

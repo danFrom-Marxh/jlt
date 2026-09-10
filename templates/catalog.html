@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}{% if active_category %}{{ active_category.name }}{% else %}Boutique{% endif %} — {{ store_name }}{% endblock %}
+{% block meta_description %}{% if active_category %}Découvrez notre sélection {{ active_category.name }} chez {{ store_name }}.{% else %}Parcourez tous les produits {{ store_name }}, filtrez par catégorie et trouvez rapidement ce qui vous correspond.{% endif %}{% endblock %}
+{% block robots %}{% if query %}noindex,follow{% else %}index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1{% endif %}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/ecommerce.css' %}">{% endblock %}
+{% block content %}
+<div class="store-page catalog-page">
+  <section class="catalog-hero"><div class="site-width"><span class="eyebrow">Catalogue</span><h1>{% if active_category %}{{ active_category.name }}{% else %}Toute la boutique{% endif %}</h1><p>{% if query %}Résultats correspondant à “{{ query }}”.{% else %}Parcourez notre sélection et trouvez votre prochain favori.{% endif %}</p></div></section>
+  <section class="site-width catalog-layout">
+    <aside class="catalog-sidebar"><div class="filter-title">Catégories</div><a class="filter-link {% if not active_category %}active{% endif %}" href="{% url 'catalog' %}"><span>Tous les produits</span></a>{% for category in categories %}<a class="filter-link {% if active_category.id == category.id %}active{% endif %}" href="{% url 'category_products' category.slug %}"><span>{{ category.name }}</span><small>{{ category.product_count }}</small></a>{% endfor %}</aside>
+    <div class="catalog-main"><div class="catalog-toolbar"><div><strong>{{ products.paginator.count }}</strong> produit{{ products.paginator.count|pluralize }}</div><form method="get" class="sort-form">{% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}<label for="sort">Trier par</label><select id="sort" name="sort" onchange="this.form.submit()"><option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Nouveautés</option><option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Prix croissant</option><option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Prix décroissant</option><option value="name" {% if current_sort == 'name' %}selected{% endif %}>Nom</option></select></form></div>
+      <div class="mobile-category-scroller"><a href="{% url 'catalog' %}">Tous</a>{% for category in categories %}<a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>{% endfor %}</div>
+      <div class="product-grid catalog-grid">{% for product in products %}{% include 'partials/product_card.html' with product=product %}{% empty %}<div class="empty-state"><i class="bi bi-search"></i><h2>Aucun produit trouvé</h2><p>Essayez une autre catégorie ou une autre recherche.</p><a class="btn btn-primary" href="{% url 'catalog' %}">Voir toute la boutique</a></div>{% endfor %}</div>
+      {% if products.paginator.num_pages > 1 %}<nav class="pagination">{% if products.has_previous %}<a href="?page={{ products.previous_page_number }}&sort={{ current_sort }}{% if query %}&q={{ query|urlencode }}{% endif %}"><i class="bi bi-arrow-left"></i></a>{% endif %}{% for n in products.paginator.page_range %}<a class="{% if products.number == n %}active{% endif %}" href="?page={{ n }}&sort={{ current_sort }}{% if query %}&q={{ query|urlencode }}{% endif %}">{{ n }}</a>{% endfor %}{% if products.has_next %}<a href="?page={{ products.next_page_number }}&sort={{ current_sort }}{% if query %}&q={{ query|urlencode }}{% endif %}"><i class="bi bi-arrow-right"></i></a>{% endif %}</nav>{% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

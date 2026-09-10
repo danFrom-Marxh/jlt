@@ -1,0 +1,32 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}À propos — {{ store_name }}{% endblock %}
+{% block meta_description %}Découvrez l’univers {{ store_name }}, notre approche de sélection et notre engagement pour une expérience d’achat simple et fiable.{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/institutional.css' %}">{% endblock %}
+{% block content %}
+<div class="institutional-page">
+  <section class="institutional-hero">
+    <div class="site-width institutional-hero-grid">
+      <div>
+        <span class="eyebrow">À propos</span>
+        <h1>Une boutique simple, soignée et pensée pour inspirer confiance.</h1>
+        <p>Just Like That réunit une sélection de produits dans une expérience d’achat claire : de belles présentations, des informations lisibles et un parcours sans complication.</p>
+        <div class="institutional-actions"><a class="btn btn-primary" href="{% url 'catalog' %}">Découvrir la boutique</a><a class="btn btn-secondary" href="{% url 'contact' %}">Nous contacter</a></div>
+      </div>
+      <div class="institutional-visual"><img src="{% static 'images/about-hero-2.jpg' %}" alt="Univers {{ store_name }}"></div>
+    </div>
+  </section>
+
+  <section class="institutional-values">
+    <div class="site-width">
+      <div class="institutional-heading"><span class="eyebrow">Notre approche</span><h2>Trois principes, sans superflu.</h2></div>
+      <div class="institutional-card-grid">
+        <article><i class="bi bi-eye"></i><h3>Clarté</h3><p>Des produits et des prix présentés de façon directe pour décider plus facilement.</p></article>
+        <article><i class="bi bi-shield-check"></i><h3>Confiance</h3><p>Un paiement sécurisé, des informations cohérentes et un support accessible en cas de question.</p></article>
+        <article><i class="bi bi-stars"></i><h3>Soin</h3><p>Une expérience visuelle élégante jusque dans les petits détails, sur ordinateur comme sur mobile.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="institutional-cta"><div class="site-width institutional-cta-card"><div><span class="eyebrow eyebrow-light">Just Like That</span><h2>Des produits qui trouvent naturellement leur place.</h2><p>Explorez la sélection et trouvez ce qui vous correspond.</p></div><a class="btn btn-white" href="{% url 'catalog' %}">Voir les produits <i class="bi bi-arrow-right"></i></a></div></section>
+</div>
+{% endblock %}

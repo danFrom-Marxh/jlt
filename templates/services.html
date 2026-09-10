@@ -1,0 +1,33 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Services — {{ store_name }}{% endblock %}
+{% block meta_description %}Découvrez les services {{ store_name }} : accompagnement avant achat, paiement sécurisé et support client clair.{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/institutional.css' %}">{% endblock %}
+{% block content %}
+<div class="institutional-page">
+  <section class="institutional-hero institutional-hero-soft">
+    <div class="site-width institutional-hero-grid service-hero-grid">
+      <div>
+        <span class="eyebrow">Nos services</span>
+        <h1>Un accompagnement clair avant, pendant et après votre achat.</h1>
+        <p>Notre priorité est de rendre chaque étape compréhensible et rassurante, sans transformer une simple commande en parcours compliqué.</p>
+        <div class="institutional-actions"><a class="btn btn-primary" href="{% url 'catalog' %}">Explorer la boutique</a><a class="btn btn-secondary" href="{% url 'contact' %}">Poser une question</a></div>
+      </div>
+      <aside class="service-promise"><i class="bi bi-headset"></i><span class="eyebrow">Notre engagement</span><strong>Une réponse utile, un parcours lisible et un paiement sécurisé.</strong></aside>
+    </div>
+  </section>
+
+  <section class="institutional-values">
+    <div class="site-width">
+      <div class="institutional-heading"><span class="eyebrow">Essentiel</span><h2>Ce que vous pouvez attendre de nous.</h2></div>
+      <div class="institutional-card-grid four">
+        <article><i class="bi bi-chat-dots"></i><h3>Conseil</h3><p>Une question sur un produit ou une variante ? Contactez-nous avant de commander.</p></article>
+        <article><i class="bi bi-credit-card"></i><h3>Paiement</h3><p>Le checkout Stripe sécurise la transaction sans exposer vos données de carte à notre serveur.</p></article>
+        <article><i class="bi bi-box-seam"></i><h3>Commande</h3><p>Des informations simples pour comprendre ce que vous achetez et suivre votre parcours.</p></article>
+        <article><i class="bi bi-arrow-repeat"></i><h3>Après-vente</h3><p>Nous restons disponibles si une commande nécessite une précision ou une assistance.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="service-process"><div class="site-width service-process-card"><div><span class="eyebrow eyebrow-light">Simple par design</span><h2>Choisir. Commander. Être accompagné.</h2></div><div class="process-inline"><span><b>01</b> Trouvez votre produit</span><span><b>02</b> Payez en sécurité</span><span><b>03</b> Contactez-nous si besoin</span></div></div></section>
+</div>
+{% endblock %}

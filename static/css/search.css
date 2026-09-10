@@ -1,0 +1,154 @@
+
+  /* ================== MOBILE FIRST ================== */
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* centre les lignes si elles ne remplissent pas toute la largeur */
+  gap: 16px; /* espace entre les produits */
+  margin: 0;
+  padding: 0;
+}
+
+.product-card {
+  flex: 0 1 calc(50% - 8px); /* 2 produits par ligne, laisse le gap de chaque côté */
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* carré */
+  overflow: hidden;
+}
+
+.product-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+/* Badges */
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.badge-out { background-color: #e74c3c; }
+.badge-limited { background-color: #f39c12; }
+
+/* Favorite button */
+.favorite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.favorite-btn:hover { background: #fff; }
+
+/* ================== PRODUCT DETAILS ================== */
+.product-details {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: #2c3e50;
+}
+
+.product-name a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.stars {
+  color: #f1c40f;
+  font-size: 14px;
+}
+
+.rating-text {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-left: 5px;
+}
+
+.product-description {
+  font-size: 13px;
+  color: #7f8c8d;
+  margin-bottom: 10px;
+  flex-grow: 1;
+}
+
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-price {
+  font-weight: bold;
+  font-size: 15px;
+  color: #27ae60;
+}
+
+.product-stock {
+  font-size: 12px;
+  color: #95a5a6;
+}
+
+/* ================== TABLETTE ET DESKTOP ================== */
+@media (min-width: 768px) {
+  .product-card {
+    flex: 0 1 calc(33.333% - 10.666px); /* 3 produits par ligne */
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card {
+    flex: 0 1 calc(25% - 12px); /* 4 produits par ligne */
+  }
+}

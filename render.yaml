@@ -1,0 +1,79 @@
+services:
+  - type: web
+    name: just-like-that
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jlt-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: GUNICORN_THREADS
+        value: "4"
+      - key: STORE_NAME
+        value: "Just Like That"
+      - key: SITE_DESCRIPTION
+        value: "Just Like That : une sélection de produits utiles, élégants et simples à commander."
+      - key: SUPPORT_EMAIL
+        sync: false
+      - key: NEWSLETTER_PROMO_CODE
+        value: "JLT8"
+      - key: STORE_ADDRESS
+        sync: false
+      - key: GOOGLE_MAPS_EMBED_API_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false
+      - key: SEND_ORDER_RECEIPTS
+        value: "True"
+      - key: OPENWEATHERMAP_API_KEY
+        sync: false
+      - key: USE_CLOUDFLARE_R2
+        value: "True"
+      - key: CLOUDFLARE_R2_ACCOUNT_ID
+        sync: false
+      - key: CLOUDFLARE_R2_ACCESS_KEY_ID
+        sync: false
+      - key: CLOUDFLARE_R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: CLOUDFLARE_R2_BUCKET_NAME
+        sync: false
+      - key: CLOUDFLARE_R2_CUSTOM_DOMAIN
+        sync: false
+      - key: STRIPE_SHIPPING_COUNTRIES
+        value: FR,BE,CA,US,GB,DE,ES,IT,ML,SN,CI,GA
+
+databases:
+  - name: jlt-db
+    plan: free
+    databaseName: jlt
+    user: jlt

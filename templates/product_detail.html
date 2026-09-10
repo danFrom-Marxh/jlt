@@ -1,0 +1,165 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}{{ product.name }} — {{ store_name }}{% endblock %}
+{% block meta_description %}{{ product.description|striptags|truncatechars:160 }}{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ product.name }} — {{ store_name }}{% endblock %}
+{% block og_description %}{{ product.description|striptags|truncatechars:180 }}{% endblock %}
+{% block og_image %}{% if product_og_image %}{{ product_og_image }}{% else %}{{ default_social_image_url }}{% endif %}{% endblock %}
+{% block og_image_alt %}{{ product.name }}{% endblock %}
+{% block twitter_title %}{{ product.name }} — {{ store_name }}{% endblock %}
+{% block twitter_description %}{{ product.description|striptags|truncatechars:180 }}{% endblock %}
+{% block twitter_image %}{% if product_og_image %}{{ product_og_image }}{% else %}{{ default_social_image_url }}{% endif %}{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{{ product_schema_json|safe }}</script>{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/ecommerce.css' %}">{% endblock %}
+{% block content %}
+<div class="store-page product-detail-page" id="productDetailRoot" data-product-slug="{{ product.slug }}" data-reviews-url="{% url 'product_reviews_more' product.slug %}">
+  <div class="site-width breadcrumbs">
+    <a href="{% url 'home' %}">Accueil</a><i class="bi bi-chevron-right"></i>
+    <a href="{% url 'catalog' %}">Boutique</a>
+    {% if product.category %}<i class="bi bi-chevron-right"></i><a href="{% url 'category_products' product.category.slug %}">{{ product.category.name }}</a>{% endif %}
+    <i class="bi bi-chevron-right"></i><span>{{ product.name }}</span>
+  </div>
+
+  <section class="site-width product-detail-grid">
+    <div class="product-gallery" data-product-gallery>
+      <div class="gallery-main" id="galleryMain">
+        <div class="gallery-track" id="galleryTrack">
+          {% if is_out_of_stock %}
+            <div class="gallery-slide gallery-slide-unavailable" data-image-url="{% static 'images/No-image.jpg' %}" data-gallery-slide-index="0">
+              <img src="{% static 'images/No-image.jpg' %}" alt="{{ product.name }} actuellement indisponible" draggable="false" decoding="async" fetchpriority="high">
+            </div>
+          {% elif all_images %}
+            {% for image in all_images %}
+              <div class="gallery-slide" data-image-url="{{ image.image.url }}" data-gallery-slide-index="{{ forloop.counter0 }}">
+                <img src="{{ image.image.url }}" alt="{{ product.name }} - vue {{ forloop.counter }}" draggable="false" decoding="async" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} onerror="this.onerror=null;this.src='{% static 'images/No-image.jpg' %}'">
+              </div>
+            {% endfor %}
+          {% elif product.image %}
+            <div class="gallery-slide" data-image-url="{{ product.image.url }}" data-gallery-slide-index="0">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" draggable="false" decoding="async" fetchpriority="high" onerror="this.onerror=null;this.src='{% static 'images/No-image.jpg' %}'">
+            </div>
+          {% else %}
+            <div class="gallery-slide" data-image-url="{% static 'images/No-image.jpg' %}" data-gallery-slide-index="0">
+              <img src="{% static 'images/No-image.jpg' %}" alt="{{ product.name }}" draggable="false" decoding="async">
+            </div>
+          {% endif %}
+        </div>
+        {% if not is_out_of_stock and all_images|length > 1 %}
+          <button class="gallery-nav gallery-prev" type="button" aria-label="Image précédente"><i class="bi bi-chevron-left"></i></button>
+          <button class="gallery-nav gallery-next" type="button" aria-label="Image suivante"><i class="bi bi-chevron-right"></i></button>
+          <div class="gallery-counter" aria-live="polite"><span id="galleryCurrent">1</span>/<span>{{ all_images|length }}</span></div>
+        {% endif %}
+        <button class="gallery-expand" id="galleryExpand" type="button" aria-label="Agrandir l’image"><i class="bi bi-arrows-fullscreen"></i><span>Agrandir</span></button>
+        {% if product.get_discount_percentage %}<span class="detail-sale">-{{ product.get_discount_percentage }}%</span>{% endif %}
+      </div>
+      {% if not is_out_of_stock and all_images|length > 1 %}
+        <div class="gallery-thumbs" id="galleryThumbs">
+          {% for image in all_images %}
+            <button class="gallery-thumb {% if forloop.first %}active{% endif %}" type="button" data-gallery-index="{{ forloop.counter0 }}" aria-label="Afficher l'image {{ forloop.counter }}">
+              <img src="{{ image.image.url }}" alt="" draggable="false" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{% static 'images/No-image.jpg' %}'">
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="product-info-panel" id="buy">
+      {% if product.category %}<a class="eyebrow" href="{% url 'category_products' product.category.slug %}">{{ product.category.name }}</a>{% endif %}
+      <h1>{{ product.name }}</h1>
+      <div class="detail-rating">{% include 'partials/star_rating.html' with rating=average_rating_value %}<strong>{{ average_rating_value }}</strong><a href="#reviews">{{ review_count_value }} avis</a></div>
+      <div class="detail-price"><strong>{{ product.price|floatformat:2 }} {{ store_currency_symbol }}</strong>{% if product.old_price %}<del>{{ product.old_price|floatformat:2 }} {{ store_currency_symbol }}</del>{% endif %}</div>
+      <p class="detail-description">{{ product.description }}</p>
+
+      {% if variants %}
+      <div class="variant-section" id="variantSection" tabindex="-1" aria-describedby="variantHelp">
+        <div class="option-title"><span>Choisissez une option</span><small id="variantHelp" aria-live="polite">Sélection requise</small></div>
+        <div class="variant-grid" id="variantGrid">
+          {% for variant in variants %}
+          <button class="variant-option {% if variant.stock == 0 %}disabled{% endif %}" type="button" data-variant-id="{{ variant.id }}" data-stock="{{ variant.stock }}" data-image="{{ variant.display_image_url }}" {% if variant.stock == 0 %}disabled{% endif %}>
+            {% if variant.color %}<span class="swatch" style="--swatch:{{ variant.color.code_hex|default:'#ddd' }}"></span>{% endif %}
+            <span>{% if variant.color %}{{ variant.color.name }}{% endif %}{% if variant.color and variant.size %} · {% endif %}{% if variant.size %}{{ variant.size.name }}{% endif %}{% if not variant.color and not variant.size %}Standard{% endif %}</span>
+            <small>{{ variant.stock }} dispo.</small>
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="purchase-row" id="primaryPurchaseZone">
+        <div class="quantity-control"><button type="button" data-qty-action="minus" aria-label="Diminuer la quantité">−</button><input id="productQuantity" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantité"><button type="button" data-qty-action="plus" aria-label="Augmenter la quantité">+</button></div>
+        <button id="detailAddCart" class="btn btn-secondary flex-grow purchase-cta" type="button" {% if is_out_of_stock %}disabled{% endif %}><span class="cta-visual"><i class="bi bi-bag-plus"></i> Ajouter au panier</span></button>
+      </div>
+      <button id="buyNowButton" class="btn btn-primary btn-block buy-now-button" type="button" {% if is_out_of_stock %}disabled{% endif %}>Acheter maintenant <i class="bi bi-arrow-right"></i></button>
+      {% if is_out_of_stock %}<div class="stock-note stock-out"><i class="bi bi-x-circle"></i> Produit actuellement indisponible</div>{% elif product.stock_status == 'low_stock' %}<div class="stock-note"><i class="bi bi-lightning"></i> Stock limité — commandez rapidement</div>{% else %}<div class="stock-note"><i class="bi bi-check-circle"></i> En stock et prêt à commander</div>{% endif %}
+
+      <div class="trust-list"><div><i class="bi bi-shield-lock"></i><span><strong>Paiement sécurisé</strong><small>Propulsé par Stripe</small></span></div><div><i class="bi bi-envelope-check"></i><span><strong>Reçu par e-mail</strong><small>Envoyé après confirmation</small></span></div><div><i class="bi bi-headset"></i><span><strong>Support client</strong><small>Une question ? Nous répondons</small></span></div></div>
+    </div>
+  </section>
+
+  <section class="site-width detail-information">
+    <details open><summary>Description détaillée <i class="bi bi-plus-lg"></i></summary><div>{{ product.description_detaillee|default:product.description|linebreaks }}</div></details>
+    <details><summary>Informations produit <i class="bi bi-plus-lg"></i></summary><div><p><strong>SKU :</strong> {{ product.sku|default:'—' }}</p><p><strong>Type :</strong> {{ product.get_product_type_display }}</p><p><strong>Catégorie :</strong> {{ product.category.name|default:'—' }}</p></div></details>
+  </section>
+
+  <section class="reviews-section" id="reviews">
+    <div class="site-width reviews-grid">
+      <div class="review-summary">
+        <span class="eyebrow">Avis clients</span><h2>Ce qu'en pense la communauté</h2>
+        <div class="review-score"><strong>{{ average_rating_value }}</strong><span>{% include 'partials/star_rating.html' with rating=average_rating_value %}<small>sur {{ review_count_value }} avis</small></span></div>
+      </div>
+      <div class="review-list-wrap">
+        <div class="review-list" id="reviewList">
+          {% for review in reviews %}{% include 'partials/review_card.html' with review=review %}{% empty %}<div class="empty-inline" id="reviewsEmpty">Soyez le premier à laisser un avis.</div>{% endfor %}
+        </div>
+        {% if review_has_more %}<button class="btn btn-secondary review-load-more" id="reviewLoadMore" type="button" data-offset="2">Voir plus d'avis <i class="bi bi-chevron-down"></i></button>{% endif %}
+      </div>
+    </div>
+    <div class="site-width review-form-wrap">
+      <button class="btn btn-secondary review-form-toggle" id="reviewFormToggle" type="button" aria-expanded="false" aria-controls="reviewFormPanel"><i class="bi bi-chat-square-text"></i> Laisser un avis</button>
+      <div class="review-form-panel" id="reviewFormPanel" hidden>
+        <form id="reviewForm" class="review-form" enctype="multipart/form-data">
+          <input type="hidden" name="product_slug" value="{{ product.slug }}">
+          {{ review_form.as_p }}
+          <button class="btn btn-primary" type="submit">Envoyer mon avis</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  {% if related_products %}{% include 'partials/product_section.html' with eyebrow='Recommandé pour vous' title='À associer avec ce produit' subtitle='Une sélection basée sur ce produit, sa catégorie et les achats associés.' products=related_products %}{% endif %}
+
+  <div class="product-lightbox" id="productLightbox" aria-hidden="true">
+    <div class="product-lightbox-backdrop" data-lightbox-close></div>
+    <section class="product-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Images du produit">
+      <button class="product-lightbox-close" id="productLightboxClose" type="button" aria-label="Fermer l’image agrandie">&times;</button>
+      <div class="product-lightbox-viewport" id="productLightboxViewport">
+        <div class="product-lightbox-track" id="productLightboxTrack">
+          {% if is_out_of_stock %}
+            <div class="product-lightbox-slide"><img src="{% static 'images/No-image.jpg' %}" alt="{{ product.name }} actuellement indisponible" draggable="false"></div>
+          {% elif all_images %}
+            {% for image in all_images %}<div class="product-lightbox-slide"><img src="{{ image.image.url }}" alt="{{ product.name }} - vue {{ forloop.counter }}" draggable="false" {% if not forloop.first %}loading="lazy"{% endif %} onerror="this.onerror=null;this.src='{% static 'images/No-image.jpg' %}'"></div>{% endfor %}
+          {% elif product.image %}
+            <div class="product-lightbox-slide"><img src="{{ product.image.url }}" alt="{{ product.name }}" draggable="false" onerror="this.onerror=null;this.src='{% static 'images/No-image.jpg' %}'"></div>
+          {% else %}
+            <div class="product-lightbox-slide"><img src="{% static 'images/No-image.jpg' %}" alt="{{ product.name }}" draggable="false"></div>
+          {% endif %}
+        </div>
+      </div>
+      {% if not is_out_of_stock and all_images|length > 1 %}
+        <button class="product-lightbox-nav product-lightbox-prev" type="button" aria-label="Image précédente"><i class="bi bi-chevron-left"></i></button>
+        <button class="product-lightbox-nav product-lightbox-next" type="button" aria-label="Image suivante"><i class="bi bi-chevron-right"></i></button>
+        <div class="product-lightbox-counter"><span id="productLightboxCurrent">1</span>/<span>{{ all_images|length }}</span></div>
+      {% endif %}
+    </section>
+  </div>
+
+  <div class="product-fixed-cta" id="productFixedCta" aria-label="Achat rapide" aria-hidden="true">
+    <div class="site-width product-fixed-cta-inner">
+      <div class="product-fixed-summary"><strong>{{ product.name }}</strong><span id="fixedVariantLabel">{% if is_out_of_stock %}Indisponible{% elif variants|length > 1 %}Choisissez une option{% else %}Prêt à ajouter{% endif %}</span></div>
+      <div class="product-fixed-price">{{ product.price|floatformat:2 }} {{ store_currency_symbol }}</div>
+      <button id="fixedAddCart" class="btn btn-primary product-fixed-add purchase-cta" type="button" {% if is_out_of_stock %}disabled{% endif %}><span class="cta-visual"><i class="bi bi-bag-plus"></i><span>{% if is_out_of_stock %}Indisponible{% else %}Ajouter au panier{% endif %}</span></span></button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/product_detail_store.js' %}"></script>{% endblock %}

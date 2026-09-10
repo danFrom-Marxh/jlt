@@ -1,0 +1,32 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Contact — {{ store_name }}{% endblock %}
+{% block meta_description %}Contactez {{ store_name }} pour toute question sur un produit, une commande ou nos services.{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/institutional.css' %}">{% endblock %}
+{% block content %}
+<div class="institutional-page contact-page">
+  <section class="contact-compact">
+    <div class="site-width contact-grid">
+      <div class="contact-copy">
+        <span class="eyebrow">Contact</span>
+        <h1>Une question ? Parlons-en simplement.</h1>
+        <p>Produit, variante, commande ou information générale : envoyez-nous votre demande et donnez-nous les éléments utiles pour vous répondre clairement.</p>
+        <div class="contact-trust"><span><i class="bi bi-shield-check"></i><b>Données protégées</b><small>Vos informations servent uniquement au traitement de votre demande.</small></span><span><i class="bi bi-chat-heart"></i><b>Support humain</b><small>Un message clair nous aide à vous répondre plus efficacement.</small></span></div>
+      </div>
+      <div class="contact-form-card">
+        <div class="contact-form-head"><span class="eyebrow">Votre message</span><h2>Comment pouvons-nous vous aider ?</h2></div>
+        <form id="contactForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-row"><label>Prénom{{ form.first_name }}</label><label>Nom{{ form.last_name }}</label></div>
+          <label>E-mail{{ form.email }}</label>
+          <label>Téléphone <small>(facultatif)</small>{{ form.phone_number }}</label>
+          <label>Message{{ form.message }}</label>
+          <label class="file-field">Pièce jointe <small>(facultatif)</small>{{ form.profil }}</label>
+          <button class="btn btn-primary btn-block" type="submit">Envoyer le message <i class="bi bi-arrow-right"></i></button>
+          <p class="contact-form-status" id="contactFormStatus" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/contact.js' %}"></script>{% endblock %}
