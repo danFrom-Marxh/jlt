@@ -16,7 +16,7 @@ RUN python -m pip install --upgrade pip && python -m pip install -r requirements
 COPY . .
 
 # WhiteNoise sert ces fichiers directement depuis l'image.
-RUN python manage.py collectstatic --noinput
+RUN SEND_ORDER_RECEIPTS=False python manage.py collectstatic --noinput
 
 RUN chmod +x /app/docker-entrypoint.sh && chown -R django:django /app
 USER django
